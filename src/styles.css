@@ -1,1 +1,73 @@
-/* You can add global styles to this file, and also import other style files */
+/* Remove Nunito import to use San Francisco (System font) */
+
+:root {
+    --bg-blue: #8ba6d5; 
+    --btn-pink: #f2a9aa; 
+    --btn-beige: #fef0cd; 
+    --btn-black: #212121;
+    --text-dark: #2c3e50; 
+    --error-bg: #f8d7da; 
+    --error-border: #f5c2c7; 
+    --error-text: #842029;
+    --success-bg: #d1e7dd; 
+    --success-border: #badbcc; 
+    --success-text: #0f5132;
+
+    /* Nuevos tonos pastel para Flashcards y secciones */
+    --bg-pastel-yellow: #fdf7c3;
+    --bg-pastel-blue: #e8f0fe;
+    --bg-pastel-pink: #f9dada;
+    --bg-pastel-gray: #f5f6fa;
+    --nav-height: 70px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "San Francisco", "SF Pro Text", "SF Pro Display", "Helvetica Neue", Arial, sans-serif; }
+
+body { 
+    background-color: var(--bg-pastel-gray); /* Fondo general neutro, el login usa la clase container con fondo azul */
+    color: var(--text-dark); 
+}
+
+/* Clases base del Auth */
+.screen-container { 
+    display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; max-width: 400px; padding: 20px; animation: fadeIn 0.3s ease-in-out; 
+    margin: 0 auto; min-height: 100vh;
+}
+.auth-wrapper {
+    background-color: var(--bg-blue);
+    min-height: 100vh;
+    display: flex;
+}
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+.logo-container { margin-bottom: 20px; text-align: center; }
+.logo-icon { font-size: 80px; margin-bottom: 10px; filter: drop-shadow(0px 4px 4px rgba(0,0,0,0.25)); }
+.brand-title { font-size: 2.5rem; color: white; font-weight: 900; margin-bottom: 30px; letter-spacing: 2px; }
+.screen-title { color: white; font-size: 1.5rem; font-weight: bold; margin-bottom: 30px; }
+
+.btn { 
+    width: 100%; padding: 12px; border-radius: 8px; border: none; font-size: 1rem; font-weight: 800; cursor: pointer; margin-bottom: 15px; box-shadow: 0px 2px 4px rgba(0,0,0,0.1); transition: all 0.3s ease; 
+}
+.btn:hover { opacity: 0.95; box-shadow: 0px 8px 15px rgba(0,0,0,0.2); transform: translateY(-2px); }
+.btn:active { box-shadow: 0px 2px 4px rgba(0,0,0,0.1); transform: translateY(0); }
+
+.btn-pink { background-color: var(--btn-pink); color: #333; }
+.btn-beige { background-color: var(--btn-beige); color: #333; }
+.btn-black { background-color: var(--btn-black); color: white; }
+.btn-blue { background-color: var(--bg-pastel-blue); color: var(--text-dark); }
+.btn-yellow { background-color: var(--bg-pastel-yellow); color: var(--text-dark); }
+
+.form-group { width: 100%; margin-bottom: 15px; text-align: left; }
+.form-group label { display: block; margin-bottom: 5px; font-size: 0.9rem; color: #333; font-weight: 700; text-transform: uppercase;}
+
+.form-control { width: 100%; padding: 12px; border-radius: 8px; border: 2px solid transparent; outline: none; box-shadow: 0px 2px 4px rgba(0,0,0,0.05); transition: border-color 0.2s; font-weight: 600;}
+.form-control.error { border-color: #dc3545; }
+.form-control:disabled { background-color: #f0f0f0; color: #666; cursor: not-allowed; }
+
+.alert-banner { width: 100%; padding: 10px; border-radius: 8px; margin-bottom: 20px; text-align: center; font-weight: bold; font-size: 0.95rem; }
+.alert-error { background-color: var(--error-bg); border: 1px solid var(--error-border); color: var(--error-text); }
+.alert-success { background-color: var(--success-bg); border: 1px solid var(--success-border); color: var(--success-text); }
+
+.link-text { color: #4a5568; font-size: 0.9rem; margin-top: 15px; cursor: pointer; text-align: center; font-weight: 700;}
+.link-text span, .link-text a { text-decoration: underline; color: inherit; }

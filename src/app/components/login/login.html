@@ -1,0 +1,40 @@
+<div class="screen-container">
+  <div class="logo-container">
+    <div class="logo-icon">📘</div>
+    <h2 class="screen-title">INICIAR SESIÓN</h2>
+  </div>
+
+  <div *ngIf="hasAuthError" class="alert-banner alert-error">
+    ⚠ Usuario o contraseña incorrectos
+  </div>
+  <div *ngIf="loginSuccess" class="alert-banner alert-success">
+    ✓ Se inició sesión correctamente
+  </div>
+
+  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" style="width: 100%;">
+    
+    <div class="form-group">
+      <label>Usuario</label>
+      <input type="text" formControlName="username" class="form-control" 
+             [class.error]="hasAuthError && loginForm.get('username')?.invalid" placeholder="ej. wagustin">
+    </div>
+
+    <div class="form-group">
+      <label>Contraseña</label>
+      <input type="password" formControlName="password" class="form-control" 
+             [class.error]="hasAuthError && loginForm.get('password')?.invalid" placeholder="*******">
+    </div>
+
+    <button *ngIf="!loginSuccess" type="submit" class="btn btn-black">
+      Iniciar Sesión
+    </button>
+  </form>
+
+  <p class="link-text" *ngIf="!loginSuccess" style="margin-top: 10px;">
+    <a>¿Olvidaste tu contraseña?</a>
+  </p>
+  
+  <p class="link-text" *ngIf="!loginSuccess" (click)="goToRegister()" style="margin-top: 20px;">
+    ¿No tienes una cuenta? <span>Regístrate</span>
+  </p>
+</div>
