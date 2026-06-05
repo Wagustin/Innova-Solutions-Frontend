@@ -1,0 +1,179 @@
+<div class="creacion-container">
+  
+  <h2 class="section-title">PANEL DE CREACIÓN 🛠️</h2>
+
+  <div class="split-layout">
+    
+    <!-- Columna Izquierda: Formularios -->
+    <div class="left-col">
+      <div class="timeline-line"></div>
+
+      <!-- CATEGORIA -->
+      <div class="form-card bg-pastel-yellow">
+        <div class="timeline-dot"></div>
+        <h3>CATEGORÍA</h3>
+        <form [formGroup]="catForm" (ngSubmit)="saveCat()">
+          <div class="form-group">
+            <label>Nombre de Categoría</label>
+            <input type="text" formControlName="nombre" class="form-control" placeholder="Ej. Ciencias">
+          </div>
+          <div class="form-group">
+            <label>URL del Icono</label>
+            <input type="text" formControlName="iconoUrl" class="form-control" placeholder="https://...">
+          </div>
+          <button class="btn btn-black">Guardar Categoría</button>
+        </form>
+      </div>
+
+      <!-- TEMA -->
+      <div class="form-card bg-pastel-blue">
+        <div class="timeline-dot"></div>
+        <h3>TEMA</h3>
+        <form [formGroup]="temaForm" (ngSubmit)="saveTema()">
+          <div class="form-group">
+            <label>Categoría</label>
+            <select formControlName="categoriaId" class="form-control">
+              <option value="">Seleccione...</option>
+              <option *ngFor="let c of categorias" [value]="c.id">{{c.nombre}}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Nombre del Tema</label>
+            <input type="text" formControlName="nombre" class="form-control" placeholder="Ej. Biología">
+          </div>
+          <button class="btn btn-black">Guardar Tema</button>
+        </form>
+      </div>
+
+      <!-- LECCION -->
+      <div class="form-card bg-pastel-yellow">
+        <div class="timeline-dot"></div>
+        <h3>LECCIÓN</h3>
+        <form [formGroup]="leccionForm" (ngSubmit)="saveLeccion()">
+          <div class="form-group">
+            <label>Tema</label>
+            <select formControlName="temaId" class="form-control">
+              <option value="">Seleccione...</option>
+              <option *ngFor="let t of temas" [value]="t.id">{{t.nombre}}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Título de la Lección</label>
+            <input type="text" formControlName="titulo" class="form-control" placeholder="Ej. La Célula">
+          </div>
+          <button class="btn btn-black">Guardar Lección</button>
+        </form>
+      </div>
+
+      <!-- FLASHCARD -->
+      <div class="form-card bg-pastel-blue">
+        <div class="timeline-dot"></div>
+        <h3>FLASHCARD</h3>
+        <form [formGroup]="flashcardForm" (ngSubmit)="saveFlashcard()">
+          <div class="form-group">
+            <label>Lección</label>
+            <select formControlName="leccionId" class="form-control">
+              <option value="">Seleccione...</option>
+              <option *ngFor="let l of lecciones" [value]="l.id">{{l.titulo}}</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label>Pregunta</label>
+            <input type="text" formControlName="preguntaTexto" class="form-control">
+          </div>
+
+          <div class="colors-row">
+            <div class="form-group">
+              <label>Color Fondo</label>
+              <input type="color" formControlName="colorFondo" class="color-picker">
+            </div>
+            <div class="form-group">
+              <label>Color Texto</label>
+              <input type="color" formControlName="colorTexto" class="color-picker">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>URL Imagen Central</label>
+            <input type="text" formControlName="imagenUrl" class="form-control">
+          </div>
+
+          <div class="answers-section">
+            <h4>Opciones de Respuesta</h4>
+            <!-- Opcion 1 -->
+            <div class="answer-box">
+              <div class="form-group">
+                <label>Respuesta 1</label>
+                <input type="text" formControlName="resp1" class="form-control">
+              </div>
+              <div class="check-group">
+                <input type="checkbox" formControlName="resp1Correcta"> ¿Es Correcta?
+              </div>
+              <div class="form-group">
+                <label>Feedback (Opcional)</label>
+                <input type="text" formControlName="resp1Feedback" class="form-control">
+              </div>
+            </div>
+
+            <!-- Opcion 2 -->
+            <div class="answer-box">
+              <div class="form-group">
+                <label>Respuesta 2</label>
+                <input type="text" formControlName="resp2" class="form-control">
+              </div>
+              <div class="check-group">
+                <input type="checkbox" formControlName="resp2Correcta"> ¿Es Correcta?
+              </div>
+              <div class="form-group">
+                <label>Feedback (Opcional)</label>
+                <input type="text" formControlName="resp2Feedback" class="form-control">
+              </div>
+            </div>
+          </div>
+
+          <button class="btn btn-black">Guardar Flashcard</button>
+        </form>
+      </div>
+
+    </div>
+
+    <!-- Columna Derecha: Tablas -->
+    <div class="right-col">
+      
+      <div class="data-table-card">
+        <h3>Categorías Registradas</h3>
+        <table class="data-table">
+          <tr><th>ID</th><th>Nombre</th></tr>
+          <tr *ngFor="let c of categorias"><td>{{c.id}}</td><td>{{c.nombre}}</td></tr>
+        </table>
+      </div>
+
+      <div class="data-table-card">
+        <h3>Temas Registrados</h3>
+        <table class="data-table">
+          <tr><th>Categoría</th><th>Nombre</th></tr>
+          <tr *ngFor="let t of temas"><td>{{getCatName(t.categoria?.id || t.categoriaId)}}</td><td>{{t.nombre}}</td></tr>
+        </table>
+      </div>
+
+      <div class="data-table-card">
+        <h3>Lecciones Registradas</h3>
+        <table class="data-table">
+          <tr><th>Tema</th><th>Título</th></tr>
+          <tr *ngFor="let l of lecciones"><td>{{getTemaName(l.tema?.id || l.temaId)}}</td><td>{{l.titulo}}</td></tr>
+        </table>
+      </div>
+
+      <div class="data-table-card">
+        <h3>Flashcards Registradas</h3>
+        <table class="data-table">
+          <tr><th>Lección</th><th>Pregunta</th></tr>
+          <tr *ngFor="let f of flashcards"><td>{{f.leccion?.titulo}}</td><td>{{f.preguntaTexto}}</td></tr>
+        </table>
+      </div>
+
+    </div>
+
+  </div>
+</div>

@@ -1,0 +1,32 @@
+<div class="flashcards-container">
+  
+  <div class="toolbar">
+    <input type="text" class="search-bar" placeholder="Buscar flashcards...">
+    <div class="actions">
+      <button class="action-btn" title="Ordenar A-Z">A-Z</button>
+      <button class="action-btn" title="Editar">✏️</button>
+      <button class="action-btn" title="Eliminar">🗑️</button>
+    </div>
+  </div>
+
+  <div class="flashcards-grid">
+    <div *ngFor="let card of flashcards" class="flashcard" [style.backgroundColor]="card.colorFondo || 'var(--bg-pastel-yellow)'">
+      <input type="checkbox" class="card-checkbox">
+      <div class="card-header">
+        <h3 [style.color]="card.colorTexto || 'var(--text-dark)'">{{ card.leccion?.titulo || 'Lección' }}</h3>
+        <span>ID: {{ card.id }}</span>
+      </div>
+      
+      <div class="card-content">
+        <p class="question" [style.color]="card.colorTexto || 'var(--text-dark)'">{{ card.preguntaTexto }}</p>
+        <div class="img-placeholder" *ngIf="!card.imagenUrl">📷 Imagen</div>
+        <img *ngIf="card.imagenUrl" [src]="card.imagenUrl" style="max-width:100%; border-radius:12px; max-height:120px;" alt="Flashcard">
+      </div>
+      
+      <div class="card-actions">
+        <button class="btn btn-black">Ver respuesta</button>
+      </div>
+    </div>
+  </div>
+
+</div>

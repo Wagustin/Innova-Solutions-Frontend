@@ -1,0 +1,62 @@
+<div class="screen-container">
+  <div class="logo-container">
+    <div class="logo-icon">📘</div>
+    <h2 class="screen-title" style="margin-bottom: 10px;">REGISTRARSE</h2>
+    <p style="color: white; font-weight: bold; margin-bottom: 25px; text-transform: uppercase;">
+      COMO {{ selectedRoleName }}
+    </p>
+  </div>
+
+  <div *ngIf="submitAttempted && registerForm.invalid" class="alert-banner alert-error">
+    ⚠ Complete todos los campos correctamente
+  </div>
+  <div *ngIf="serverErrorMessage" class="alert-banner alert-error">
+    ⚠ {{ serverErrorMessage }}
+  </div>
+  <div *ngIf="registrationSuccess" class="alert-banner alert-success">
+    ✓ Se registró correctamente
+  </div>
+
+  <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" style="width: 100%;">
+    
+    <div class="form-group">
+      <label>Nombre Completo</label>
+      <input type="text" formControlName="nombreCompleto" class="form-control" 
+             [class.error]="submitAttempted && registerForm.get('nombreCompleto')?.invalid" placeholder="Ej. Juan Pérez">
+    </div>
+
+    <div class="form-group">
+      <label>Nombre de Usuario</label>
+      <input type="text" formControlName="username" class="form-control" 
+             [class.error]="submitAttempted && registerForm.get('username')?.invalid" placeholder="juanperez123">
+    </div>
+
+    <div class="form-group">
+      <label>Correo Electrónico</label>
+      <input type="email" formControlName="correoElectronico" class="form-control" 
+             [class.error]="submitAttempted && registerForm.get('correoElectronico')?.invalid" placeholder="ejemplo@correo.com">
+    </div>
+
+    <div class="form-group">
+      <label>Contraseña</label>
+      <input type="password" formControlName="contrasena" class="form-control" 
+             [class.error]="submitAttempted && registerForm.get('contrasena')?.invalid" placeholder="Mínimo 8 caracteres">
+    </div>
+
+    <div class="form-group">
+      <label>Plan de Suscripción</label>
+      <select formControlName="planSuscripcionId" class="form-control" [class.error]="submitAttempted && registerForm.get('planSuscripcionId')?.invalid">
+        <option value="">Selecciona tu plan...</option>
+        <option [value]="1">Plan Gratuito ($0.0)</option>
+        <option [value]="2">Plan Familiar Mensual ($45.0)</option>
+        <option [value]="3">Plan Institucional Anual ($450.0)</option>
+      </select>
+    </div>
+
+    <button *ngIf="!registrationSuccess" type="submit" class="btn btn-black">
+      Registrarse
+    </button>
+  </form>
+
+  <p class="link-text" (click)="goToLogin()">Ya tienes una cuenta? <span>Inicia Sesión</span></p>
+</div>
