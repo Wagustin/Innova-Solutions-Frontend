@@ -20,6 +20,11 @@ export class Login implements OnInit {
   constructor(private fb: FormBuilder, private router: Router, private authService: AuthService) {}
 
   ngOnInit(): void {
+    if (localStorage.getItem('token') != null) {
+      localStorage.clear();
+      console.log("Token y items eliminados");
+    }
+    
     this.loginForm = this.fb.group({
       username: ['', Validators.required],
       password: ['', Validators.required]
@@ -41,11 +46,6 @@ export class Login implements OnInit {
       next: (res) => {
         this.loginSuccess = true;
         this.loginForm.disable();
-        
-        // Guardar token y redirigir
-        if (res.jwt) {
-          localStorage.setItem('jwt', res.jwt);
-        }
         
         setTimeout(() => {
           this.router.navigate(['/inicio']);

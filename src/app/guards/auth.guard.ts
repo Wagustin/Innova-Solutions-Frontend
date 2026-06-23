@@ -8,10 +8,13 @@ export class AuthGuard implements CanActivate {
   constructor(private router: Router) {}
 
   canActivate(): boolean | UrlTree {
-    const token = localStorage.getItem('jwt');
-    if (token) {
+    const token = localStorage.getItem('token');
+    if (token != null) {
       return true;
+    } else {
+      alert("No accesible!");
+      this.router.navigate(['/welcome']);
+      return false;
     }
-    return this.router.parseUrl('/welcome');
   }
 }

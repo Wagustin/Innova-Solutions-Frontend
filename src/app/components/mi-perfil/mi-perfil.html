@@ -1,0 +1,100 @@
+<div class="perfil-container">
+  <div class="perfil-card">
+    <div class="perfil-header">
+      <div class="avatar-container" (click)="showAvatarModal = true">
+        <img *ngIf="fotoPerfil" [src]="fotoPerfil" alt="Avatar" class="avatar-img" />
+        <div *ngIf="!fotoPerfil" class="css-avatar">
+          <div class="head"></div>
+          <div class="body"></div>
+        </div>
+        <button type="button" class="edit-avatar-btn">
+          <div class="css-camera"></div>
+        </button>
+      </div>
+      <h2>Editar Perfil</h2>
+      <p>Actualiza tu información personal</p>
+    </div>
+
+    <form [formGroup]="perfilForm" (ngSubmit)="onSave()" class="perfil-form">
+      <div class="form-group">
+        <label>Nombre Completo</label>
+        <div class="input-wrapper">
+          <input type="text" formControlName="nombreCompleto" placeholder="Ej. Ana Pérez" />
+          <button type="button" class="btn-inline-edit" (click)="enableField('nombreCompleto')" *ngIf="perfilForm.get('nombreCompleto')?.disabled">
+            <span class="css-icon css-icon-pencil css-icon-anim"></span>
+          </button>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Nombre de Usuario</label>
+        <div class="input-wrapper">
+          <input type="text" formControlName="username" placeholder="Ej. ana_perez" />
+          <button type="button" class="btn-inline-edit" (click)="enableField('username')" *ngIf="perfilForm.get('username')?.disabled">
+            <span class="css-icon css-icon-pencil css-icon-anim"></span>
+          </button>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Correo Electrónico</label>
+        <div class="input-wrapper">
+          <input type="email" formControlName="correoElectronico" placeholder="Ej. ana@correo.com" />
+          <button type="button" class="btn-inline-edit" (click)="enableField('correoElectronico')" *ngIf="perfilForm.get('correoElectronico')?.disabled">
+            <span class="css-icon css-icon-pencil css-icon-anim"></span>
+          </button>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Nueva Contraseña</label>
+        <div class="input-wrapper">
+          <input type="password" formControlName="contrasena" placeholder="Déjalo en blanco si no cambia" />
+          <button type="button" class="btn-inline-edit" (click)="enableField('contrasena')" *ngIf="perfilForm.get('contrasena')?.disabled">
+            <span class="css-icon css-icon-pencil css-icon-anim"></span>
+          </button>
+        </div>
+        <small class="error-text" *ngIf="perfilForm.get('contrasena')?.invalid && perfilForm.get('contrasena')?.touched">
+          Mínimo 8 caracteres
+        </small>
+      </div>
+
+      <button type="submit" [disabled]="perfilForm.pristine || perfilForm.invalid" class="btn-save" *ngIf="isAnyFieldEnabled">
+        <span><span class="css-icon css-icon-save css-icon-anim"></span> Guardar Cambios</span>
+      </button>
+
+      <!-- Feedback de guardado con animación -->
+      <div class="save-feedback" [class.show]="saved">
+        ✅ Perfil actualizado correctamente
+      </div>
+    </form>
+  </div>
+
+  <div class="modal-overlay" *ngIf="showAvatarModal" (click)="showAvatarModal = false">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <h3>Cambiar Foto de Perfil</h3>
+
+      <div
+        class="dropzone"
+        [class.dragover]="isDragOver"
+        (dragover)="onDragOver($event)"
+        (dragleave)="onDragLeave($event)"
+        (drop)="onDrop($event)"
+        (click)="fileInput.click()">
+        <div class="dropzone-content">
+          <div class="modal-camera"></div>
+          <p>Arrastra tu foto aquí o <strong>haz clic</strong> para seleccionar</p>
+        </div>
+        <input
+          #fileInput
+          type="file"
+          accept="image/*"
+          (change)="onFileChange($event)"
+          class="hidden-input"
+        />
+      </div>
+
+      <button type="button" class="btn-cancel" (click)="closeModal()">Cancelar</button>
+    </div>
+  </div>
+</div>

@@ -47,7 +47,6 @@
 .avatar-btn {
   background: var(--bg-pastel-pink);
   border: none;
-  font-size: 1.5rem;
   width: 45px;
   height: 45px;
   border-radius: 50%;
@@ -56,8 +55,35 @@
   justify-content: center;
   align-items: center;
   transition: transform 0.2s;
+  overflow: hidden;
+  padding: 0;
 }
 .avatar-btn:hover { transform: scale(1.05); }
+
+.css-avatar-small {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: #e0e6ed;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  pointer-events: none;
+}
+.css-avatar-small .head {
+  width: 16px;
+  height: 16px;
+  background: #95a5a6;
+  border-radius: 50%;
+  margin-bottom: 2px;
+}
+.css-avatar-small .body {
+  width: 36px;
+  height: 18px;
+  background: #95a5a6;
+  border-radius: 18px 18px 0 0;
+}
 
 .profile-dropdown {
   position: absolute;

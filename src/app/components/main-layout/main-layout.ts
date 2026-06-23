@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
+import { Component, HostListener, ElementRef, ViewChild } from '@angular/core';
+import { RouterOutlet, RouterLink, RouterLinkActive, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -11,8 +11,28 @@ import { CommonModule } from '@angular/common';
 })
 export class MainLayout {
   isProfileMenuOpen = false;
+  @ViewChild('profileMenuContainer') profileMenuContainer!: ElementRef;
+
+  constructor(private router: Router) {}
 
   toggleProfileMenu() {
     this.isProfileMenuOpen = !this.isProfileMenuOpen;
+  }
+
+  closeProfileMenu() {
+    this.isProfileMenuOpen = false;
+  }
+
+  logout() {
+    this.closeProfileMenu();
+    localStorage.clear();
+    this.router.navigate(['/welcome']);
+  }
+
+  @HostListener('document:click', ['$event'])
+  clickout(event: Event) {
+    if (this.isProfileMenuOpen && this.profileMenuContainer && !this.profileMenuContainer.nativeElement.contains(event.target)) {
+      this.closeProfileMenu();
+    }
   }
 }

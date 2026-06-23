@@ -8,6 +8,7 @@ import { Inicio } from './components/inicio/inicio';
 import { MisFlashcards } from './components/mis-flashcards/mis-flashcards';
 import { Creacion } from './components/creacion/creacion';
 import { AcercaDe } from './components/acerca-de/acerca-de';
+import { MiPerfil } from './components/mi-perfil/mi-perfil';
 import { AuthGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
@@ -24,7 +25,8 @@ export const routes: Routes = [
       { path: 'inicio', component: Inicio },
       { path: 'mis-flashcards', component: MisFlashcards },
       { path: 'creacion', component: Creacion },
-      { path: 'acerca-de', component: AcercaDe }
+      { path: 'acerca-de', component: AcercaDe },
+      { path: 'mi-perfil', component: MiPerfil }
     ]
   },
   { path: '**', redirectTo: 'welcome' }

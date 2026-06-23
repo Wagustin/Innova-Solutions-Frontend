@@ -1,6 +1,6 @@
 <nav class="navbar">
   <div class="nav-brand" routerLink="/inicio">
-    <span class="icon">📘</span> AutStudy
+    <span class="icon">📘</span> Innova-Solutions
   </div>
   
   <ul class="nav-links">
@@ -10,12 +10,17 @@
     <li><a routerLink="/acerca-de" routerLinkActive="active">Acerca de</a></li>
   </ul>
 
-  <div class="nav-profile">
-    <button class="avatar-btn" (click)="toggleProfileMenu()">👤</button>
+  <div class="nav-profile" #profileMenuContainer>
+    <button class="avatar-btn" (click)="toggleProfileMenu()">
+      <div class="css-avatar-small">
+        <div class="head"></div>
+        <div class="body"></div>
+      </div>
+    </button>
     
     <div class="profile-dropdown" *ngIf="isProfileMenuOpen">
-      <a routerLink="/perfil">Mi perfil</a>
-      <a routerLink="/welcome">Cerrar Sesión</a>
+      <a routerLink="/mi-perfil" (click)="closeProfileMenu()">Mi perfil</a>
+      <a (click)="logout()" style="cursor: pointer;">Cerrar Sesión</a>
     </div>
   </div>
 </nav>
@@ -27,7 +32,7 @@
 <footer class="footer">
   <div class="footer-content">
     <div class="footer-brand">
-      <h3>AutStudy</h3>
+      <h3>Innova-Solutions</h3>
       <p>Aprendizaje divertido y efectivo.</p>
     </div>
     <div class="footer-social">
