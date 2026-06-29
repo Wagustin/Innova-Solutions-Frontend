@@ -1,0 +1,56 @@
+<div class="alumno-container">
+  <div class="alumno-card">
+    <div class="alumno-header">
+      <div class="alumno-icon">🧒</div>
+      <h1>Registrar a mi hijo</h1>
+      <p class="subtitle">Completa los datos para que tu hijo acceda a la plataforma.</p>
+    </div>
+
+    <div *ngIf="submitAttempted && (alumnoForm.invalid || !selectedAvatar)" class="alert-banner alert-error">
+      ⚠ Completa todos los campos y selecciona un avatar
+    </div>
+    <div *ngIf="serverErrorMessage" class="alert-banner alert-error">
+      ⚠ {{ serverErrorMessage }}
+    </div>
+    <div *ngIf="registrationSuccess" class="alert-banner alert-success">
+      ✓ Alumno registrado correctamente
+    </div>
+
+    <form [formGroup]="alumnoForm" (ngSubmit)="onSubmit()" style="width: 100%;">
+
+      <div class="form-group">
+        <label>Nombre / Nickname del niño</label>
+        <input type="text" formControlName="nickname" class="form-control"
+               [class.error]="submitAttempted && alumnoForm.get('nickname')?.invalid"
+               placeholder="Ej. Carlitos">
+      </div>
+
+      <div class="form-group">
+        <label>PIN de acceso (4 dígitos)</label>
+        <input type="text" formControlName="pin" class="form-control" maxlength="4"
+               [class.error]="submitAttempted && alumnoForm.get('pin')?.invalid"
+               placeholder="****" inputmode="numeric" pattern="[0-9]*">
+      </div>
+
+      <div class="form-group">
+        <label>Selecciona un avatar</label>
+        <div class="avatar-grid">
+          <div *ngFor="let avatar of avatares"
+               class="avatar-option"
+               [class.selected]="selectedAvatar === avatar"
+               (click)="seleccionarAvatar(avatar)">
+            {{ avatar }}
+          </div>
+        </div>
+      </div>
+
+      <button *ngIf="!registrationSuccess" type="submit" class="btn btn-black">
+        Registrar
+      </button>
+    </form>
+
+    <p class="link-text" *ngIf="!registrationSuccess" (click)="volverDashboard()">
+      ← Volver al panel
+    </p>
+  </div>
+</div>

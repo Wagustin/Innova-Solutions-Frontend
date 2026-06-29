@@ -19,6 +19,8 @@ export class RegisterForm implements OnInit {
   
   selectedRoleName = 'USUARIO';
   selectedRoleId = 1;
+  isPadre = false;
+  isEstudiante = false;
 
   constructor(
     private fb: FormBuilder, 
@@ -35,15 +37,39 @@ export class RegisterForm implements OnInit {
       if (params['roleId']) {
         this.selectedRoleId = +params['roleId'];
       }
+      const upper = this.selectedRoleName.toUpperCase();
+      this.isPadre = upper.includes('PADRE') || upper.includes('TUTOR');
+      this.isEstudiante = upper.includes('ESTUDIANTE') || upper.includes('ALUMNO');
+      this.buildForm();
     });
+  }
 
-    this.registerForm = this.fb.group({
-      nombreCompleto: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
-      username: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
-      correoElectronico: ['', [Validators.required, Validators.email]],
-      contrasena: ['', [Validators.required, Validators.minLength(8)]],
-      planSuscripcionId: ['', Validators.required]
-    });
+  private buildForm(): void {
+    let controls: any;
+
+    if (this.isEstudiante) {
+      controls = {
+        padreUsername: ['', [Validators.required, Validators.minLength(3)]],
+        nombreCompleto: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
+        username: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
+        contrasena: ['', [Validators.required, Validators.minLength(4)]]
+      };
+    } else {
+      controls = {
+        nombreCompleto: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
+        username: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
+        correoElectronico: ['', [Validators.required, Validators.email]],
+        contrasena: ['', [Validators.required, Validators.minLength(8)]]
+      };
+
+      if (this.isPadre) {
+        controls.profesorUsername = ['', [Validators.required, Validators.minLength(3)]];
+      } else {
+        controls.planSuscripcionId = ['', Validators.required];
+      }
+    }
+
+    this.registerForm = this.fb.group(controls);
   }
 
   onSubmit(): void {
@@ -55,12 +81,28 @@ export class RegisterForm implements OnInit {
       return;
     }
 
-    const payload = {
-      ...this.registerForm.value,
+    const payload: any = {
       metodoRegistro: 'MANUAL',
-      rolId: this.selectedRoleId,
-      planSuscripcionId: parseInt(this.registerForm.value.planSuscripcionId, 10)
+      rolId: this.selectedRoleId
     };
+
+    if (this.isEstudiante) {
+      payload.padreUsername = this.registerForm.value.padreUsername;
+      payload.nombreCompleto = this.registerForm.value.nombreCompleto;
+      payload.username = this.registerForm.value.username;
+      payload.contrasena = this.registerForm.value.contrasena;
+    } else {
+      payload.nombreCompleto = this.registerForm.value.nombreCompleto;
+      payload.username = this.registerForm.value.username;
+      payload.correoElectronico = this.registerForm.value.correoElectronico;
+      payload.contrasena = this.registerForm.value.contrasena;
+
+      if (this.isPadre) {
+        payload.profesorUsername = this.registerForm.value.profesorUsername;
+      } else {
+        payload.planSuscripcionId = parseInt(this.registerForm.value.planSuscripcionId, 10);
+      }
+    }
     
     this.apiService.registrarUsuario(payload).subscribe({
       next: (res) => {

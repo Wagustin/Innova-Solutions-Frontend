@@ -20,9 +20,13 @@ export class AuthService {
           localStorage.setItem('username', username);
           this.tryExtractAndSaveUserId(token, body);
         } else if (body && body.jwt) {
-          // Fallback en caso el backend aún envíe jwt en el body
           localStorage.setItem('token', body.jwt);
           this.tryExtractAndSaveUserId(body.jwt, body);
+        }
+        if (body && body.rol) {
+          localStorage.setItem('rol', body.rol);
+        } else if (body && body.rolNombre) {
+          localStorage.setItem('rol', body.rolNombre);
         }
         return body;
       })

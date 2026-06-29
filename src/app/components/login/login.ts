@@ -48,7 +48,12 @@ export class Login implements OnInit {
         this.loginForm.disable();
         
         setTimeout(() => {
-          this.router.navigate(['/inicio']);
+          const rol = localStorage.getItem('rol')?.toUpperCase() || '';
+          if (rol.includes('PADRE')) {
+            this.router.navigate(['/padre/dashboard']);
+          } else {
+            this.router.navigate(['/inicio']);
+          }
         }, 1500);
       },
       error: (err) => {
