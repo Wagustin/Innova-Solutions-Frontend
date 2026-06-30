@@ -6,7 +6,7 @@
   <ul class="nav-links">
     <li><a routerLink="/inicio" routerLinkActive="active">Inicio</a></li>
     <li><a routerLink="/mis-flashcards" routerLinkActive="active">Mis Flashcards</a></li>
-    <li><a routerLink="/creacion" routerLinkActive="active">Creación</a></li>
+    <li *ngIf="puedeCrear"><a routerLink="/creacion" routerLinkActive="active">Creación</a></li>
     <li><a routerLink="/acerca-de" routerLinkActive="active">Acerca de</a></li>
   </ul>
 

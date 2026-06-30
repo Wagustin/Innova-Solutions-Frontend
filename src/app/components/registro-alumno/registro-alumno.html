@@ -6,8 +6,8 @@
       <p class="subtitle">Completa los datos para que tu hijo acceda a la plataforma.</p>
     </div>
 
-    <div *ngIf="submitAttempted && (alumnoForm.invalid || !selectedAvatar)" class="alert-banner alert-error">
-      ⚠ Completa todos los campos y selecciona un avatar
+    <div *ngIf="submitAttempted && alumnoForm.invalid" class="alert-banner alert-error">
+      ⚠ Completa todos los campos correctamente
     </div>
     <div *ngIf="serverErrorMessage" class="alert-banner alert-error">
       ⚠ {{ serverErrorMessage }}
@@ -19,10 +19,11 @@
     <form [formGroup]="alumnoForm" (ngSubmit)="onSubmit()" style="width: 100%;">
 
       <div class="form-group">
-        <label>Nombre / Nickname del niño</label>
+        <label>Nombre de Usuario del Niño</label>
         <input type="text" formControlName="nickname" class="form-control"
                [class.error]="submitAttempted && alumnoForm.get('nickname')?.invalid"
-               placeholder="Ej. Carlitos">
+               placeholder="Ej. carlitos123">
+        <small class="field-hint">(Con este nombre de usuario tu hijo iniciará sesión)</small>
       </div>
 
       <div class="form-group">
@@ -30,18 +31,6 @@
         <input type="text" formControlName="pin" class="form-control" maxlength="4"
                [class.error]="submitAttempted && alumnoForm.get('pin')?.invalid"
                placeholder="****" inputmode="numeric" pattern="[0-9]*">
-      </div>
-
-      <div class="form-group">
-        <label>Selecciona un avatar</label>
-        <div class="avatar-grid">
-          <div *ngFor="let avatar of avatares"
-               class="avatar-option"
-               [class.selected]="selectedAvatar === avatar"
-               (click)="seleccionarAvatar(avatar)">
-            {{ avatar }}
-          </div>
-        </div>
       </div>
 
       <button *ngIf="!registrationSuccess" type="submit" class="btn btn-black">

@@ -17,9 +17,6 @@ export class RegistroAlumno implements OnInit {
   registrationSuccess = false;
   serverErrorMessage = '';
 
-  avatares = ['🐶', '🐱', '🐼', '🐸', '🦊', '🐯', '🐰', '🐻'];
-  selectedAvatar = '';
-
   constructor(
     private fb: FormBuilder,
     private router: Router,
@@ -33,25 +30,22 @@ export class RegistroAlumno implements OnInit {
     });
   }
 
-  seleccionarAvatar(avatar: string): void {
-    this.selectedAvatar = avatar;
-  }
-
   onSubmit(): void {
     this.submitAttempted = true;
     this.serverErrorMessage = '';
 
-    if (this.alumnoForm.invalid || !this.selectedAvatar) {
+    if (this.alumnoForm.invalid) {
       return;
     }
 
-    const padreId = localStorage.getItem('userId');
+    if (!localStorage.getItem('token')) {
+      this.serverErrorMessage = 'No hay sesión activa. Inicia sesión nuevamente.';
+      return;
+    }
 
     const payload = {
-      nickname: this.alumnoForm.value.nickname,
-      pin: this.alumnoForm.value.pin,
-      avatar: this.selectedAvatar,
-      padreId: padreId ? parseInt(padreId, 10) : null
+      username: this.alumnoForm.value.nickname,
+      pin: this.alumnoForm.value.pin
     };
 
     this.apiService.registrarAlumno(payload).subscribe({
@@ -62,7 +56,8 @@ export class RegistroAlumno implements OnInit {
       },
       error: (err) => {
         console.error('Error al registrar alumno:', err);
-        this.serverErrorMessage = err.error?.message || err.message || 'Error al comunicarse con el servidor';
+        const msg = err.error?.message || err.error?.error || err.message;
+        this.serverErrorMessage = msg || 'Error al comunicarse con el servidor';
       }
     });
   }

@@ -19,8 +19,8 @@
 
   <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" style="width: 100%;">
 
-    <!-- ========== CAMPOS PARA ESTUDIANTE ========== -->
-    <ng-container *ngIf="isEstudiante">
+    <!-- ========== CAMPOS PARA ALUMNO ========== -->
+    <ng-container *ngIf="isAlumno">
       <div class="form-group">
         <label>Usuario del Padre</label>
         <input type="text" formControlName="padreUsername" class="form-control"
@@ -50,8 +50,8 @@
       </div>
     </ng-container>
 
-    <!-- ========== CAMPOS PARA PADRE / DOCENTE ========== -->
-    <ng-container *ngIf="!isEstudiante">
+    <!-- ========== CAMPOS PARA PROFESOR / PADRE ========== -->
+    <ng-container *ngIf="!isAlumno">
       <div class="form-group">
         <label>Nombre Completo</label>
         <input type="text" formControlName="nombreCompleto" class="form-control"
