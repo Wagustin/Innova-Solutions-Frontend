@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ApiDataService } from '../../services/api-data.service';
@@ -21,7 +21,7 @@ export class Creacion implements OnInit {
   lecciones: any[] = [];
   flashcards: any[] = [];
 
-  constructor(private fb: FormBuilder, private api: ApiDataService) {}
+  constructor(private fb: FormBuilder, private api: ApiDataService, private cdr: ChangeDetectorRef) {}
 
   ngOnInit() {
     this.catForm = this.fb.group({
@@ -57,10 +57,22 @@ export class Creacion implements OnInit {
   }
 
   loadData() {
-    this.api.getCategorias().subscribe(res => this.categorias = res);
-    this.api.getTemas().subscribe(res => this.temas = res);
-    this.api.getLecciones().subscribe(res => this.lecciones = res);
-    this.api.getFlashcards().subscribe(res => this.flashcards = res);
+    this.api.getCategorias().subscribe({
+      next: res => { this.categorias = res; this.cdr.detectChanges(); },
+      error: err => console.error('Error al cargar categorías:', err)
+    });
+    this.api.getTemas().subscribe({
+      next: res => { this.temas = res; this.cdr.detectChanges(); },
+      error: err => console.error('Error al cargar temas:', err)
+    });
+    this.api.getLecciones().subscribe({
+      next: res => { this.lecciones = res; this.cdr.detectChanges(); },
+      error: err => console.error('Error al cargar lecciones:', err)
+    });
+    this.api.getFlashcards().subscribe({
+      next: res => { this.flashcards = res; this.cdr.detectChanges(); },
+      error: err => console.error('Error al cargar flashcards:', err)
+    });
   }
 
   saveCat() {
