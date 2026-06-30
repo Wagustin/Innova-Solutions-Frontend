@@ -19,8 +19,9 @@ export class RegisterForm implements OnInit {
   
   selectedRoleName = 'USUARIO';
   selectedRoleId = 1;
+  isProfesor = false;
   isPadre = false;
-  isEstudiante = false;
+  isAlumno = false;
 
   constructor(
     private fb: FormBuilder, 
@@ -38,8 +39,9 @@ export class RegisterForm implements OnInit {
         this.selectedRoleId = +params['roleId'];
       }
       const upper = this.selectedRoleName.toUpperCase();
-      this.isPadre = upper.includes('PADRE') || upper.includes('TUTOR');
-      this.isEstudiante = upper.includes('ESTUDIANTE') || upper.includes('ALUMNO');
+      this.isProfesor = this.selectedRoleId === 1 || upper === 'PROFESOR';
+      this.isPadre = this.selectedRoleId === 2 || upper === 'PADRE';
+      this.isAlumno = this.selectedRoleId === 3 || upper === 'ALUMNO';
       this.buildForm();
     });
   }
@@ -47,7 +49,7 @@ export class RegisterForm implements OnInit {
   private buildForm(): void {
     let controls: any;
 
-    if (this.isEstudiante) {
+    if (this.isAlumno) {
       controls = {
         padreUsername: ['', [Validators.required, Validators.minLength(3)]],
         nombreCompleto: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
@@ -86,7 +88,7 @@ export class RegisterForm implements OnInit {
       rolId: this.selectedRoleId
     };
 
-    if (this.isEstudiante) {
+    if (this.isAlumno) {
       payload.padreUsername = this.registerForm.value.padreUsername;
       payload.nombreCompleto = this.registerForm.value.nombreCompleto;
       payload.username = this.registerForm.value.username;
@@ -104,6 +106,9 @@ export class RegisterForm implements OnInit {
       }
     }
     
+    localStorage.setItem('rol', this.selectedRoleName);
+    localStorage.setItem('rolId', String(this.selectedRoleId));
+
     this.apiService.registrarUsuario(payload).subscribe({
       next: (res) => {
         this.registrationSuccess = true;

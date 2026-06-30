@@ -59,6 +59,6 @@ export class ApiDataService {
 
   // Alumnos (registro desde Padre)
   registrarAlumno(payload: any): Observable<any> {
-    return this.http.post(`${this.baseUrl}/alumnos`, payload);
+    return this.http.post(`${this.baseUrl}/usuarios/registro-alumno`, payload);
   }
 }

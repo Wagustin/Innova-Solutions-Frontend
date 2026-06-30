@@ -48,9 +48,12 @@ export class Login implements OnInit {
         this.loginForm.disable();
         
         setTimeout(() => {
-          const rol = localStorage.getItem('rol')?.toUpperCase() || '';
-          if (rol.includes('PADRE')) {
+          const rol = (localStorage.getItem('rol') || '').toUpperCase().replace(/^ROLE_/, '');
+          const rolId = localStorage.getItem('rolId');
+          if (rol === 'PADRE' || rolId === '2') {
             this.router.navigate(['/padre/dashboard']);
+          } else if (rol === 'ALUMNO' || rolId === '3') {
+            this.router.navigate(['/inicio']);
           } else {
             this.router.navigate(['/inicio']);
           }

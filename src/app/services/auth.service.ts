@@ -24,9 +24,19 @@ export class AuthService {
           this.tryExtractAndSaveUserId(body.jwt, body);
         }
         if (body && body.rol) {
-          localStorage.setItem('rol', body.rol);
+          localStorage.setItem('rol', this.limpiarRol(body.rol));
         } else if (body && body.rolNombre) {
-          localStorage.setItem('rol', body.rolNombre);
+          localStorage.setItem('rol', this.limpiarRol(body.rolNombre));
+        } else if (body && body.role) {
+          localStorage.setItem('rol', this.limpiarRol(body.role));
+        } else if (body && body.roleName) {
+          localStorage.setItem('rol', this.limpiarRol(body.roleName));
+        } else if (body && body.tipo) {
+          localStorage.setItem('rol', this.limpiarRol(body.tipo));
+        } else if (body && body.roles && body.roles.length > 0) {
+          localStorage.setItem('rol', this.limpiarRol(body.roles[0]));
+        } else if (body && body.authorities && body.authorities.length > 0) {
+          localStorage.setItem('rol', this.limpiarRol(body.authorities[0]));
         }
         return body;
       })
@@ -39,21 +49,62 @@ export class AuthService {
     } else if (body && body.userId) {
       localStorage.setItem('userId', body.userId);
     } else {
-      try {
-        const base64Url = token.split('.')[1];
-        if (base64Url) {
-          const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-          const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
-              return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-          }).join(''));
-          const payload = JSON.parse(jsonPayload);
-          if (payload.id) localStorage.setItem('userId', payload.id);
-          else if (payload.userId) localStorage.setItem('userId', payload.userId);
-          else if (payload.custom_id) localStorage.setItem('userId', payload.custom_id);
-        }
-      } catch (e) {
-        console.error('Error al decodificar token JWT', e);
-      }
+      this.tryExtractFromJwt(token);
     }
+
+    if (!localStorage.getItem('rol')) {
+      this.tryExtractRolFromJwt(token);
+    }
+  }
+
+  private tryExtractFromJwt(token: string): void {
+    try {
+      const payload = this.decodeJwt(token);
+      if (!payload) return;
+      if (payload.id) localStorage.setItem('userId', payload.id);
+      else if (payload.userId) localStorage.setItem('userId', payload.userId);
+    } catch (e) {
+      console.error('Error al decodificar token JWT', e);
+    }
+  }
+
+  private tryExtractRolFromJwt(token: string): void {
+    try {
+      const payload = this.decodeJwt(token);
+      if (!payload) return;
+      const raw = payload.rol || payload.role || payload.rolNombre || payload.roleName
+               || payload.tipo || payload.rolId
+               || this.arrayFirst(payload.roles)
+               || this.arrayFirst(payload.authorities)
+               || this.arrayFirst(payload.groups);
+      if (raw) {
+        localStorage.setItem('rol', this.limpiarRol(raw));
+      }
+    } catch (e) {
+      console.error('Error al extraer rol del token JWT', e);
+    }
+  }
+
+  private decodeJwt(token: string): any {
+    try {
+      const base64Url = token.split('.')[1];
+      if (!base64Url) return null;
+      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      const json = decodeURIComponent(atob(base64).split('').map(c =>
+          '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
+      ).join(''));
+      return JSON.parse(json);
+    } catch {
+      return null;
+    }
+  }
+
+  private arrayFirst(arr: any): string | null {
+    return Array.isArray(arr) && arr.length > 0 ? String(arr[0]) : null;
+  }
+
+  private limpiarRol(rol: any): string {
+    const s = String(rol).toUpperCase().trim();
+    return s.replace(/^ROLE_/, '');
   }
 }

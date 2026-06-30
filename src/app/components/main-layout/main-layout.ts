@@ -13,6 +13,12 @@ export class MainLayout {
   isProfileMenuOpen = false;
   @ViewChild('profileMenuContainer') profileMenuContainer!: ElementRef;
 
+  get puedeCrear(): boolean {
+    const rol = (localStorage.getItem('rol') || '').toUpperCase().replace(/^ROLE_/, '');
+    const rolId = localStorage.getItem('rolId');
+    return rol === 'PROFESOR' || rolId === '1';
+  }
+
   constructor(private router: Router) {}
 
   toggleProfileMenu() {
