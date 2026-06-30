@@ -10,6 +10,8 @@ import { Creacion } from './components/creacion/creacion';
 import { AcercaDe } from './components/acerca-de/acerca-de';
 import { MiPerfil } from './components/mi-perfil/mi-perfil';
 import { AuthGuard } from './guards/auth.guard';
+import { PadreDashboard } from './components/padre-dashboard/padre-dashboard';
+import { RegistroAlumno } from './components/registro-alumno/registro-alumno';
 
 export const routes: Routes = [
   { path: 'welcome', component: Welcome },
@@ -26,7 +28,9 @@ export const routes: Routes = [
       { path: 'mis-flashcards', component: MisFlashcards },
       { path: 'creacion', component: Creacion },
       { path: 'acerca-de', component: AcercaDe },
-      { path: 'mi-perfil', component: MiPerfil }
+      { path: 'mi-perfil', component: MiPerfil },
+      { path: 'padre/dashboard', component: PadreDashboard },
+      { path: 'padre/registrar-alumno', component: RegistroAlumno }
     ]
   },
   { path: '**', redirectTo: 'welcome' }
