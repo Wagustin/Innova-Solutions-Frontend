@@ -1,16 +1,50 @@
 <div class="padre-container">
   <div class="padre-card">
-    <div class="padre-icon">👨‍👩‍👧‍👦</div>
-    <h1>Panel del Padre</h1>
-    <p class="welcome-text">Bienvenido, <strong>{{ username }}</strong></p>
-    <p class="subtitle">Desde aquí puedes gestionar el acceso de tus hijos a la plataforma.</p>
+    <!-- Header Icon: CSS family house icon -->
+    <div class="padre-icon-wrapper">
+      <div class="css-family-icon large">
+        <div class="roof"></div>
+        <div class="base">
+          <div class="door"></div>
+        </div>
+      </div>
+    </div>
+    
+    <h1>Portal del Padre</h1>
+    <p class="welcome-text">¡Hola, <strong>{{ username }}</strong>!</p>
+    <p class="subtitle">Bienvenido a tu espacio de acompañamiento escolar.</p>
 
-    <button class="btn btn-primary" (click)="registrarHijo()">
-      ➕ Registrar a mi hijo
-    </button>
+    <!-- Sección de Información Relevante -->
+    <div class="info-section">
+      <div class="info-box">
+        <span class="box-icon">
+          <span class="css-icon icon-bulb"></span>
+        </span>
+        <div class="box-text">
+          <h3>Acompañamiento en Casa</h3>
+          <p>Te recomendamos repasar las flashcards 10 minutos al día con tu hijo. La constancia es clave para el aprendizaje.</p>
+        </div>
+      </div>
 
-    <button class="btn btn-secondary" (click)="irInicio()">
-      📚 Ir al Inicio
-    </button>
+      <div class="info-box">
+        <span class="box-icon">
+          <span class="css-icon icon-school"></span>
+        </span>
+        <div class="box-text">
+          <h3>Gestión de Alumnos</h3>
+          <p>Para registrar nuevos hijos o ver el avance de sus flashcards asignadas, utiliza el menú <strong>Mis Hijos</strong> en la barra superior.</p>
+        </div>
+      </div>
+
+      <div class="info-box">
+        <span class="box-icon">
+          <span class="css-icon icon-lock"></span>
+        </span>
+        <div class="box-text">
+          <h3>Seguridad Garantizada</h3>
+          <p>Los accesos de tus hijos están protegidos mediante códigos PIN individuales que tú mismo configuras al registrarlos.</p>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

@@ -61,4 +61,14 @@ export class ApiDataService {
   registrarAlumno(payload: any): Observable<any> {
     return this.http.post(`${this.baseUrl}/usuarios/registro-alumno`, payload);
   }
+
+  // Progresos de Evaluación
+  getProgresosEvaluacion(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}/progresos-evaluacion`);
+  }
+
+  // Relaciones Tutor-Estudiante
+  getRelacionesTutorEstudiante(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}/relaciones-tutor-estudiante`);
+  }
 }
