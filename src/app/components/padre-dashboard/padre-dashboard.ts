@@ -1,5 +1,4 @@
-import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -9,16 +8,10 @@ import { CommonModule } from '@angular/common';
   templateUrl: './padre-dashboard.html',
   styleUrls: ['./padre-dashboard.css']
 })
-export class PadreDashboard {
+export class PadreDashboard implements OnInit {
   username = localStorage.getItem('username') || '';
 
-  constructor(private router: Router) {}
+  constructor() {}
 
-  registrarHijo(): void {
-    this.router.navigate(['/padre/registrar-alumno']);
-  }
-
-  irInicio(): void {
-    this.router.navigate(['/inicio']);
-  }
+  ngOnInit(): void {}
 }
