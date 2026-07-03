@@ -69,6 +69,7 @@
       <div class="form-card bg-pastel-blue">
         <div class="timeline-dot"></div>
         <h3>FLASHCARD</h3>
+        <p class="form-hint">Creá una pregunta con sus opciones de respuesta para la lección.</p>
         <form [formGroup]="flashcardForm" (ngSubmit)="saveFlashcard()">
           <div class="form-group">
             <label>Lección</label>
@@ -77,62 +78,59 @@
               <option *ngFor="let l of lecciones" [value]="l.id">{{l.titulo}}</option>
             </select>
           </div>
-          
+
           <div class="form-group">
             <label>Pregunta</label>
-            <input type="text" formControlName="preguntaTexto" class="form-control">
-          </div>
-
-          <div class="colors-row">
-            <div class="form-group">
-              <label>Color Fondo</label>
-              <input type="color" formControlName="colorFondo" class="color-picker">
-            </div>
-            <div class="form-group">
-              <label>Color Texto</label>
-              <input type="color" formControlName="colorTexto" class="color-picker">
-            </div>
+            <input type="text" formControlName="preguntaTexto" class="form-control" placeholder="Ej. ¿Cuál es la capital de Perú?">
           </div>
 
           <div class="form-group">
-            <label>URL Imagen Central</label>
-            <input type="text" formControlName="imagenUrl" class="form-control">
+            <label>Imagen (opcional)</label>
+            <div class="image-input-row">
+              <input type="file" (change)="onFileSelected($event)" accept="image/*" class="form-control file-input">
+              <span class="image-sep">o</span>
+              <input type="text" (input)="onUrlPasted($event)" placeholder="Pegá una URL..." class="form-control url-input">
+            </div>
+            <span *ngIf="imagenSubiendo" class="upload-status">Subiendo...</span>
+            <span *ngIf="imagenUrl && !imagenPreview" class="upload-status done">✓ URL cargada</span>
+            <img *ngIf="imagenPreview" [src]="imagenPreview" class="upload-preview">
           </div>
 
           <div class="answers-section">
             <h4>Opciones de Respuesta</h4>
-            <!-- Opcion 1 -->
+
             <div class="answer-box">
               <div class="form-group">
-                <label>Respuesta 1</label>
-                <input type="text" formControlName="resp1" class="form-control">
+                <label>Opción A</label>
+                <input type="text" formControlName="resp1" class="form-control" placeholder="Ej. Lima">
               </div>
               <div class="check-group">
-                <input type="checkbox" formControlName="resp1Correcta"> ¿Es Correcta?
+                <input type="checkbox" formControlName="resp1Correcta" id="resp1Correcta">
+                <label for="resp1Correcta">✅ Correcta</label>
               </div>
-              <div class="form-group">
-                <label>Feedback (Opcional)</label>
-                <input type="text" formControlName="resp1Feedback" class="form-control">
+              <div class="form-group feedback-group">
+                <label>Feedback</label>
+                <input type="text" formControlName="resp1Feedback" class="form-control" placeholder="Opcional — ej. ¡Casi! Era Lima">
               </div>
             </div>
 
-            <!-- Opcion 2 -->
             <div class="answer-box">
               <div class="form-group">
-                <label>Respuesta 2</label>
-                <input type="text" formControlName="resp2" class="form-control">
+                <label>Opción B</label>
+                <input type="text" formControlName="resp2" class="form-control" placeholder="Ej. Buenos Aires">
               </div>
               <div class="check-group">
-                <input type="checkbox" formControlName="resp2Correcta"> ¿Es Correcta?
+                <input type="checkbox" formControlName="resp2Correcta" id="resp2Correcta">
+                <label for="resp2Correcta">✅ Correcta</label>
               </div>
-              <div class="form-group">
-                <label>Feedback (Opcional)</label>
-                <input type="text" formControlName="resp2Feedback" class="form-control">
+              <div class="form-group feedback-group">
+                <label>Feedback</label>
+                <input type="text" formControlName="resp2Feedback" class="form-control" placeholder="Opcional — ej. ¡Correcto!">
               </div>
             </div>
           </div>
 
-          <button class="btn btn-black">Guardar Flashcard</button>
+          <button class="btn btn-black" [disabled]="flashcardForm.invalid">Guardar Flashcard</button>
         </form>
       </div>
 

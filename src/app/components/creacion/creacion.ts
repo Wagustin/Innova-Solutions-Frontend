@@ -21,6 +21,11 @@ export class Creacion implements OnInit {
   lecciones: any[] = [];
   flashcards: any[] = [];
 
+  imagenUrl = '';
+  imagenPreview = '';
+  imagenSubiendo = false;
+  archivoSeleccionado: File | null = null;
+
   constructor(private fb: FormBuilder, private api: ApiDataService) {}
 
   ngOnInit() {
@@ -42,15 +47,12 @@ export class Creacion implements OnInit {
     this.flashcardForm = this.fb.group({
       leccionId: ['', Validators.required],
       preguntaTexto: ['', Validators.required],
-      colorFondo: ['#fdf7c3', Validators.required],
-      colorTexto: ['#2c3e50', Validators.required],
-      imagenUrl: ['https://ejemplo.com/img.png'], // default para testing
       resp1: ['', Validators.required],
       resp1Correcta: [false],
-      resp1Feedback: ['Buen intento', Validators.required],
+      resp1Feedback: [''],
       resp2: ['', Validators.required],
       resp2Correcta: [false],
-      resp2Feedback: ['Correcto', Validators.required]
+      resp2Feedback: ['']
     });
 
     this.loadData();
@@ -96,23 +98,45 @@ export class Creacion implements OnInit {
     }
   }
 
+  onUrlPasted(event: any) {
+    const url = event.target.value?.trim();
+    this.imagenUrl = url || '';
+    if (url) { this.imagenPreview = ''; this.archivoSeleccionado = null; }
+  }
+
+  onFileSelected(event: any) {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    this.archivoSeleccionado = file;
+    // preview local
+    const reader = new FileReader();
+    reader.onload = e => this.imagenPreview = e.target?.result as string;
+    reader.readAsDataURL(file);
+    // subir al server
+    this.imagenSubiendo = true;
+    this.api.subirImagen(file).subscribe({
+      next: (res) => { this.imagenUrl = 'http://localhost:8080' + res.url; this.imagenSubiendo = false; },
+      error: () => { this.imagenSubiendo = false; alert('Error al subir la imagen'); }
+    });
+  }
+
   saveFlashcard() {
     if(this.flashcardForm.valid) {
       const form = this.flashcardForm.value;
       const payload = {
         preguntaTexto: form.preguntaTexto,
-        imagenUrl: form.imagenUrl,
-        colorFondo: form.colorFondo,
-        colorTexto: form.colorTexto,
+        imagenUrl: this.imagenUrl,
+        colorFondo: '#fdf7c3',
+        colorTexto: '#2c3e50',
         leccionId: form.leccionId,
         opciones: [
-          { textoOpcion: form.resp1, esCorrecta: form.resp1Correcta, feedbackRespuesta: form.resp1Feedback },
-          { textoOpcion: form.resp2, esCorrecta: form.resp2Correcta, feedbackRespuesta: form.resp2Feedback }
+          { textoOpcion: form.resp1, esCorrecta: form.resp1Correcta, feedbackRespuesta: form.resp1Feedback || 'Sin feedback' },
+          { textoOpcion: form.resp2, esCorrecta: form.resp2Correcta, feedbackRespuesta: form.resp2Feedback || 'Sin feedback' }
         ]
       };
       
       this.api.crearFlashcardConOpciones(payload).subscribe({
-        next: (res) => { this.loadData(); this.flashcardForm.reset({colorFondo: '#fdf7c3', colorTexto: '#2c3e50', imagenUrl: 'https://ejemplo.com/img.png'}); },
+        next: () => { this.loadData(); this.flashcardForm.reset(); this.imagenUrl = ''; this.imagenPreview = ''; this.archivoSeleccionado = null; },
         error: (err) => console.error(err)
       });
     }
