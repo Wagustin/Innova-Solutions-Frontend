@@ -64,7 +64,9 @@ export class RegistroAlumno implements OnInit {
 
   irALista(): void {
     this.vista = 'lista';
-    this.cargarDatos();
+    if (this.hijos.length === 0) {
+      this.cargarDatos();
+    }
   }
 
   volverMenu(): void {
@@ -265,11 +267,11 @@ export class RegistroAlumno implements OnInit {
 
     this.apiService.registrarAlumno(payload).subscribe({
       next: (res) => {
+        this.hijos.push(res);
         this.registrationSuccess = true;
         this.alumnoForm.disable();
-        // Volver al menú principal en 1.5s
         setTimeout(() => {
-          this.volverMenu();
+          this.irALista();
         }, 1500);
       },
       error: (err) => {
