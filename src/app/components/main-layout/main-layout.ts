@@ -21,8 +21,7 @@ export class MainLayout {
 
   get esPadre(): boolean {
     const rol = (localStorage.getItem('rol') || '').toUpperCase().replace(/^ROLE_/, '');
-    const rolId = localStorage.getItem('rolId');
-    return rol === 'PADRE' || rolId === '2';
+    return rol === 'PADRE' || rol === 'TUTOR' || localStorage.getItem('rolId') === '2';
   }
 
   get getInicioLink(): string {

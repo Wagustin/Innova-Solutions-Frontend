@@ -125,4 +125,8 @@ export class RegisterForm implements OnInit {
   goToLogin(): void {
     this.router.navigate(['/login']);
   }
+
+  goBack(): void {
+    this.router.navigate(['/role']);
+  }
 }

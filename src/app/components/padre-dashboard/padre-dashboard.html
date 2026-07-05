@@ -46,5 +46,23 @@
         </div>
       </div>
     </div>
+
+    <!-- Sección de Reporte de Dificultad -->
+    <div class="report-section" *ngIf="reporteDificultad && reporteDificultad.length > 0">
+      <h2>Reporte de Dificultad de Flashcards</h2>
+      <div class="chart-container">
+        <div class="chart-bar-wrapper" *ngFor="let item of reporteDificultad">
+          <div class="chart-label">{{ item.dificultad }}</div>
+          <div class="chart-bar">
+            <!-- Using ngClass with normalizer to handle accents correctly if needed, or just relying on standard strings -->
+            <div class="chart-fill" 
+                 [style.width]="item.widthPercent + '%'" 
+                 [ngClass]="item.cssClass">
+              {{ item.total }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
