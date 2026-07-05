@@ -267,9 +267,8 @@ export class RegistroAlumno implements OnInit {
       next: (res) => {
         this.registrationSuccess = true;
         this.alumnoForm.disable();
-        // Cargar los datos actualizados y volver al menú principal en 1.5s
+        // Volver al menú principal en 1.5s
         setTimeout(() => {
-          this.cargarDatos();
           this.volverMenu();
         }, 1500);
       },
