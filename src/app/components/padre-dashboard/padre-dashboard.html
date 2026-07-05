@@ -56,8 +56,8 @@
           <div class="chart-bar">
             <!-- Using ngClass with normalizer to handle accents correctly if needed, or just relying on standard strings -->
             <div class="chart-fill" 
-                 [style.width]="(item.total * 5) + '%'" 
-                 [ngClass]="item.dificultad.toLowerCase()">
+                 [style.width]="item.widthPercent + '%'" 
+                 [ngClass]="item.cssClass">
               {{ item.total }}
             </div>
           </div>
