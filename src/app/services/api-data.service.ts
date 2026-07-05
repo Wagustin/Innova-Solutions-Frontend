@@ -41,6 +41,9 @@ export class ApiDataService {
   getFlashcards(): Observable<any[]> {
     return this.http.get<any[]>(`${this.baseUrl}/flashcards`);
   }
+  getFlashcard(id: number): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/flashcards/${id}`);
+  }
   crearFlashcardConOpciones(payload: any): Observable<any> {
     return this.http.post(`${this.baseUrl}/flashcards/con-opciones`, payload);
   }
@@ -49,6 +52,12 @@ export class ApiDataService {
     return this.http.get<any[]>(`${this.baseUrl}/flashcards/reporte/dificultad`);
   }
 
+  // Upload
+  subirImagen(file: File): Observable<any> {
+    const fd = new FormData();
+    fd.append('file', file);
+    return this.http.post(`${this.baseUrl}/upload`, fd);
+  }
   // Usuarios (Perfil)
   getUsuarios(): Observable<any[]> {
     return this.http.get<any[]>(`${this.baseUrl}/usuarios`);

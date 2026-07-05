@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { ApiDataService } from '../../services/api-data.service';
 
 interface Option {
@@ -32,8 +33,10 @@ interface Flashcard {
 })
 export class MisFlashcards implements OnInit {
   flashcards: Flashcard[] = [];
+  loading = true;
+  errorMsg = '';
 
-  constructor(private apiService: ApiDataService) {}
+  constructor(private apiService: ApiDataService, private cdr: ChangeDetectorRef, private router: Router) {}
 
   ngOnInit(): void {
     this.apiService.getFlashcards().subscribe({
@@ -43,9 +46,14 @@ export class MisFlashcards implements OnInit {
           selectedOption: undefined,
           isAnswered: false
         }));
+        this.loading = false;
+        this.cdr.detectChanges();
       },
       error: (err) => {
-        console.error('Error fetching flashcards:', err);
+        console.error(err);
+        this.loading = false;
+        this.errorMsg = 'No se pudieron cargar las flashcards.';
+        this.cdr.detectChanges();
       }
     });
   }

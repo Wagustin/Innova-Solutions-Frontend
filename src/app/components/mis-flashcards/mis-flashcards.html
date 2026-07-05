@@ -13,7 +13,11 @@
     </div>
   </div>
 
-  <div class="flashcards-grid">
+  <div *ngIf="loading" class="state-msg">Cargando...</div>
+  <div *ngIf="errorMsg" class="state-msg error">{{ errorMsg }}</div>
+  <div *ngIf="!loading && !errorMsg && flashcards.length === 0" class="state-msg empty">No hay flashcards todavía. Creá una desde el panel de creación.</div>
+
+  <div class="flashcards-grid" *ngIf="flashcards.length > 0">
     <div *ngFor="let card of flashcards" class="flashcard" [style.backgroundColor]="card.colorFondo || 'var(--bg-pastel-yellow)'">
       <input type="checkbox" class="card-checkbox">
       <div class="card-header">

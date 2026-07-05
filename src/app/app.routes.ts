@@ -6,6 +6,7 @@ import { Login } from './components/login/login';
 import { MainLayout } from './components/main-layout/main-layout';
 import { Inicio } from './components/inicio/inicio';
 import { MisFlashcards } from './components/mis-flashcards/mis-flashcards';
+import { ResponderFlashcard } from './components/responder-flashcard/responder-flashcard';
 import { Creacion } from './components/creacion/creacion';
 import { AcercaDe } from './components/acerca-de/acerca-de';
 import { MiPerfil } from './components/mi-perfil/mi-perfil';
@@ -26,6 +27,7 @@ export const routes: Routes = [
       { path: '', redirectTo: 'inicio', pathMatch: 'full' },
       { path: 'inicio', component: Inicio },
       { path: 'mis-flashcards', component: MisFlashcards },
+      { path: 'responder/:id', component: ResponderFlashcard },
       { path: 'creacion', component: Creacion },
       { path: 'acerca-de', component: AcercaDe },
       { path: 'mi-perfil', component: MiPerfil },

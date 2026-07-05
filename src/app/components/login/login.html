@@ -4,6 +4,9 @@
     <h2 class="screen-title">INICIAR SESIÓN</h2>
   </div>
 
+  <div *ngIf="sessionExpired" class="alert-banner alert-warning">
+    ⏰ Sesión expirada. Iniciá sesión de nuevo.
+  </div>
   <div *ngIf="hasAuthError" class="alert-banner alert-error">
     ⚠ Usuario o contraseña incorrectos
   </div>
