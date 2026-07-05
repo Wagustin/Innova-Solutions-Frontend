@@ -63,18 +63,23 @@
 .bg-pastel-yellow { background-color: var(--bg-pastel-yellow); }
 .bg-pastel-blue { background-color: var(--bg-pastel-blue); }
 
-.colors-row {
-  display: flex;
-  gap: 20px;
+.form-hint {
+  color: #666;
+  margin-bottom: 20px;
+  font-size: 0.95rem;
 }
-.color-picker {
-  width: 100%;
-  height: 45px;
-  padding: 0;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
+.feedback-group label::after {
+  content: " (opcional)";
+  font-weight: 400;
+  color: #999;
 }
+.upload-status { font-size: 0.85rem; margin-left: 10px; font-weight: 700; }
+.upload-status.done { color: #27ae60; }
+.upload-preview { max-width: 150px; max-height: 100px; margin-top: 8px; border-radius: 8px; display: block; }
+.image-input-row { display: flex; align-items: center; gap: 10px; }
+.image-input-row .file-input { flex: 1; }
+.image-input-row .url-input { flex: 1; }
+.image-sep { font-weight: 700; color: #999; }
 
 .answers-section {
   background: rgba(255,255,255,0.5);

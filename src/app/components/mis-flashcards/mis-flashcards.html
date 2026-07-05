@@ -13,8 +13,12 @@
     </div>
   </div>
 
-  <div class="flashcards-grid">
-    <div *ngFor="let card of flashcards" class="flashcard" [style.backgroundColor]="card.colorFondo || 'var(--bg-pastel-yellow)'">
+  <div *ngIf="loading" class="state-msg">Cargando...</div>
+  <div *ngIf="errorMsg" class="state-msg error">{{ errorMsg }}</div>
+  <div *ngIf="!loading && !errorMsg && flashcards.length === 0" class="state-msg empty">No hay flashcards todavía. Creá una desde el panel de creación.</div>
+
+  <div class="flashcards-grid" *ngIf="flashcards.length > 0">
+    <div *ngFor="let card of flashcards" class="flashcard" [style.backgroundColor]="card.colorFondo || 'var(--bg-pastel-yellow)'" (click)="irAResponder(card.id)">
       <input type="checkbox" class="card-checkbox">
       <div class="card-header">
         <h3 [style.color]="card.colorTexto || 'var(--text-dark)'">{{ card.leccion?.titulo || 'Lección' }}</h3>
@@ -28,7 +32,7 @@
       </div>
       
       <div class="card-actions">
-        <button class="btn btn-black">Ver respuesta</button>
+        <button class="btn btn-black">Responder →</button>
       </div>
     </div>
   </div>

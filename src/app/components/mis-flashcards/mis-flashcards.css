@@ -109,3 +109,13 @@
 
 .card-actions { margin-top: auto; }
 .card-actions .btn { margin-bottom: 0; }
+
+.state-msg {
+  text-align: center;
+  padding: 60px 20px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #666;
+}
+.state-msg.error { color: #c0392b; }
+.state-msg.empty { color: #888; }

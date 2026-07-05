@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
@@ -16,8 +16,11 @@ export class Login implements OnInit {
   submitAttempted = false;
   loginSuccess = false;
   hasAuthError = false;
+  sessionExpired = false;
 
-  constructor(private fb: FormBuilder, private router: Router, private authService: AuthService) {}
+  constructor(private fb: FormBuilder, private router: Router, private route: ActivatedRoute, private authService: AuthService) {
+    this.sessionExpired = this.route.snapshot.queryParams['expired'] === '1';
+  }
 
   ngOnInit(): void {
     if (localStorage.getItem('token') != null) {

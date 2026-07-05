@@ -1,16 +1,16 @@
 /* Remove Nunito import to use San Francisco (System font) */
 
 :root {
-    --bg-blue: #8ba6d5; 
-    --btn-pink: #f2a9aa; 
-    --btn-beige: #fef0cd; 
+    --bg-blue: #8ba6d5;
+    --btn-pink: #f2a9aa;
+    --btn-beige: #fef0cd;
     --btn-black: #212121;
-    --text-dark: #2c3e50; 
-    --error-bg: #f8d7da; 
-    --error-border: #f5c2c7; 
+    --text-dark: #2c3e50;
+    --error-bg: #f8d7da;
+    --error-border: #f5c2c7;
     --error-text: #842029;
-    --success-bg: #d1e7dd; 
-    --success-border: #badbcc; 
+    --success-bg: #d1e7dd;
+    --success-border: #badbcc;
     --success-text: #0f5132;
 
     /* Nuevos tonos pastel para Flashcards y secciones */
@@ -23,14 +23,14 @@
 
 * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "San Francisco", "SF Pro Text", "SF Pro Display", "Helvetica Neue", Arial, sans-serif; }
 
-body { 
+body {
     background-color: var(--bg-pastel-gray); /* Fondo general neutro, el login usa la clase container con fondo azul */
-    color: var(--text-dark); 
+    color: var(--text-dark);
 }
 
-/* Clases base del Auth */
-.screen-container { 
-    display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; max-width: 400px; padding: 20px; animation: fadeIn 0.3s ease-in-out; 
+/* Clases base del Auth holi*/
+.screen-container {
+    display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; max-width: 400px; padding: 20px; animation: fadeIn 0.3s ease-in-out;
     margin: 0 auto; min-height: 100vh;
 }
 .auth-wrapper {
@@ -46,8 +46,8 @@ body {
 .brand-title { font-size: 2.5rem; color: white; font-weight: 900; margin-bottom: 30px; letter-spacing: 2px; }
 .screen-title { color: white; font-size: 1.5rem; font-weight: bold; margin-bottom: 30px; }
 
-.btn { 
-    width: 100%; padding: 12px; border-radius: 8px; border: none; font-size: 1rem; font-weight: 800; cursor: pointer; margin-bottom: 15px; box-shadow: 0px 2px 4px rgba(0,0,0,0.1); transition: all 0.3s ease; 
+.btn {
+    width: 100%; padding: 12px; border-radius: 8px; border: none; font-size: 1rem; font-weight: 800; cursor: pointer; margin-bottom: 15px; box-shadow: 0px 2px 4px rgba(0,0,0,0.1); transition: all 0.3s ease;
 }
 .btn:hover { opacity: 0.95; box-shadow: 0px 8px 15px rgba(0,0,0,0.2); transform: translateY(-2px); }
 .btn:active { box-shadow: 0px 2px 4px rgba(0,0,0,0.1); transform: translateY(0); }
@@ -68,6 +68,7 @@ body {
 .alert-banner { width: 100%; padding: 10px; border-radius: 8px; margin-bottom: 20px; text-align: center; font-weight: bold; font-size: 0.95rem; }
 .alert-error { background-color: var(--error-bg); border: 1px solid var(--error-border); color: var(--error-text); }
 .alert-success { background-color: var(--success-bg); border: 1px solid var(--success-border); color: var(--success-text); }
+.alert-warning { background-color: #fff3cd; border: 1px solid #ffc107; color: #856404; }
 
 .link-text { color: #4a5568; font-size: 0.9rem; margin-top: 15px; cursor: pointer; text-align: center; font-weight: 700;}
 .link-text span, .link-text a { text-decoration: underline; color: inherit; }
