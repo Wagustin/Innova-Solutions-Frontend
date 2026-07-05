@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ApiDataService } from '../../services/api-data.service';
 
 @Component({
   selector: 'app-padre-dashboard',
@@ -10,8 +11,18 @@ import { CommonModule } from '@angular/common';
 })
 export class PadreDashboard implements OnInit {
   username = localStorage.getItem('username') || '';
+  reporteDificultad: any[] = [];
 
-  constructor() {}
+  constructor(private apiService: ApiDataService) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.apiService.getReporteDificultad().subscribe({
+      next: (data) => {
+        this.reporteDificultad = data;
+      },
+      error: (err) => {
+        console.error('Error fetching difficulty report', err);
+      }
+    });
+  }
 }
