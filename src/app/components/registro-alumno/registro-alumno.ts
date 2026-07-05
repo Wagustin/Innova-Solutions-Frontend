@@ -75,8 +75,6 @@ export class RegistroAlumno implements OnInit {
 
   // Data loading methods
   cargarDatos(): void {
-    this.loaded = false;
-    this.hijos = [];
     const parentIdStr = localStorage.getItem('userId');
     const parentId = parentIdStr ? Number(parentIdStr) : null;
 
