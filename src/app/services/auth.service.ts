@@ -38,6 +38,14 @@ export class AuthService {
         } else if (body && body.authorities && body.authorities.length > 0) {
           localStorage.setItem('rol', this.limpiarRol(body.authorities[0]));
         }
+        if (body && body.rolId != null) {
+          localStorage.setItem('rolId', String(body.rolId));
+        } else {
+          const rol = localStorage.getItem('rol');
+          if (rol === 'PROFESOR') localStorage.setItem('rolId', '1');
+          else if (rol === 'PADRE' || rol === 'TUTOR') localStorage.setItem('rolId', '2');
+          else if (rol === 'ALUMNO') localStorage.setItem('rolId', '3');
+        }
         return body;
       })
     );
