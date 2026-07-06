@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -34,7 +34,8 @@ export class Creacion implements OnInit {
     private fb: FormBuilder,
     private api: ApiDataService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
@@ -92,22 +93,25 @@ export class Creacion implements OnInit {
           }
           this.imagenUrl = f.imagenUrl || '';
           this.modalAbierto = 'flashcard';
+          this.cdr.detectChanges();
         }
       });
     }
   }
 
   loadData() {
-    this.api.getCategorias().subscribe({ next: res => this.categorias = res, error: err => console.error(err) });
-    this.api.getTemas().subscribe({ next: res => this.temas = res, error: err => console.error(err) });
-    this.api.getLecciones().subscribe({ next: res => this.lecciones = res, error: err => console.error(err) });
-    this.api.getFlashcards().subscribe({ next: res => this.flashcards = res, error: err => console.error(err) });
+    this.api.getCategorias().subscribe({ next: res => { this.categorias = res; this.cdr.detectChanges(); }, error: err => { console.error(err); this.cdr.detectChanges(); } });
+    this.api.getTemas().subscribe({ next: res => { this.temas = res; this.cdr.detectChanges(); }, error: err => { console.error(err); this.cdr.detectChanges(); } });
+    this.api.getLecciones().subscribe({ next: res => { this.lecciones = res; this.cdr.detectChanges(); }, error: err => { console.error(err); this.cdr.detectChanges(); } });
+    this.api.getFlashcards().subscribe({ next: res => { this.flashcards = res; this.cdr.detectChanges(); }, error: err => { console.error(err); this.cdr.detectChanges(); } });
     this.api.getUsuarios().subscribe({
       next: (res) => {
         this.alumnos = res.filter((u: any) => u.rol?.id === 3);
+        this.cdr.detectChanges();
       },
       error: (err) => {
         console.error('No se pudieron cargar los alumnos (posible falta de permisos):', err);
+        this.cdr.detectChanges();
       }
     });
   }
