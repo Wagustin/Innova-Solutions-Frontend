@@ -52,7 +52,6 @@ export class AuthService {
         if (body && body.nombreCompleto) {
           localStorage.setItem('nombreCompleto', body.nombreCompleto);
         }
-        }
         return body;
       })
     );
