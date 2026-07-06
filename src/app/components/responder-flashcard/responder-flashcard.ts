@@ -35,7 +35,11 @@ import { ApiDataService } from '../../services/api-data.service';
 
       <div *ngIf="respuestaVisible" class="respuesta-box">
         ✅ {{ flashcard.respuestaCorrecta }}
-        <button class="btn btn-black" style="margin-top:12px; width:100%" (click)="router.navigate(['/mis-flashcards'])">Volver</button>
+      </div>
+
+      <div *ngIf="respondida" style="display:flex; gap:10px; margin-top:16px;">
+        <button class="btn btn-black" style="flex:1" (click)="repetir()">🔄 Repetir</button>
+        <button class="btn btn-black" style="flex:1" (click)="router.navigate(['/mis-flashcards'])">Volver</button>
       </div>
     </div>
 
@@ -122,6 +126,15 @@ export class ResponderFlashcard implements OnInit {
 
   editar() {
     this.router.navigate(['/creacion'], { queryParams: { edit: this.flashcard.id } });
+  }
+
+  repetir() {
+    this.respondida = false;
+    this.seleccionada = null;
+    this.feedback = '';
+    this.respuestaVisible = false;
+    this.progresoGuardado = false;
+    this.cdr.detectChanges();
   }
 
   eliminar() {

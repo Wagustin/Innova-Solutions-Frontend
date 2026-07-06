@@ -1,0 +1,63 @@
+<div class="mis-alumnos-container">
+  <ng-container>
+    <section class="alumnos-header animate-fade-in" style="background: linear-gradient(135deg, rgba(255,255,255,0.8), rgba(255,255,255,0.4)); border-radius: 1.5rem; padding: 2rem; margin-bottom: 2rem; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+      <div class="header-content text-center">
+        <h1 style="font-size: 2.5rem; color: var(--primary-color); margin-bottom: 0.5rem;"><i class="fa-solid" [ngClass]="esPadre ? 'fa-children' : 'fa-users'"></i> {{ titulo }}</h1>
+        <p style="font-size: 1.2rem; color: var(--text-secondary);">{{ descripcion }}</p>
+      </div>
+    </section>
+
+    <!-- GRID DE ALUMNOS -->
+    <section class="alumnos-grid animate-slide-up" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 2rem;">
+      <div class="alumno-card glass-panel hover-lift" *ngFor="let alumno of alumnos" 
+           [style.border]="alumnoSeleccionadoId === alumno.id ? '2px solid var(--primary-color)' : '1px solid rgba(0,0,0,0.05)'"
+           (click)="seleccionarAlumno(alumno.id)"
+           style="padding: 1.5rem; border-radius: 1rem; cursor: pointer; display: flex; flex-direction: column; align-items: center; text-align: center;">
+        <div class="alumno-avatar" style="margin-bottom: 1rem;">
+          <div class="avatar-circle" style="width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%); display: flex; justify-content: center; align-items: center; font-size: 2.8rem; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+            {{ getAvatar(alumno) }}
+          </div>
+        </div>
+        <div class="alumno-info" style="margin-bottom: 1rem; width: 100%;">
+          <h3 style="font-size: 1.4rem; color: var(--text-dark); margin-bottom: 0.25rem;">{{ alumno.nombreCompleto || alumno.username }}</h3>
+          <p class="email" style="color: var(--text-secondary); font-size: 0.95rem;"><i class="fa-solid fa-envelope"></i> {{alumno.correoElectronico}}</p>
+          <div class="alumno-stats" style="margin-top: 1rem;">
+            <span class="badge" style="background: rgba(59,130,246,0.1); color: var(--primary-color); padding: 0.5rem 1rem; border-radius: 2rem; font-weight: 600;"><i class="fa-solid fa-star" style="color: #f59e0b;"></i> Puntos: {{alumno.puntaje_Total || 0}}</span>
+          </div>
+        </div>
+        <div class="alumno-action" style="width: 100%;">
+          <button class="btn-sm btn-outline btn-block" style="width: 100%; border-radius: 2rem; padding: 0.5rem; transition: all 0.3s;" [style.background]="alumnoSeleccionadoId === alumno.id ? 'var(--primary-color)' : 'transparent'" [style.color]="alumnoSeleccionadoId === alumno.id ? 'white' : 'var(--primary-color)'">
+            {{ alumnoSeleccionadoId === alumno.id ? 'Ocultar Avance' : 'Ver Avance' }}
+          </button>
+        </div>
+
+        <!-- DETALLE DEL AVANCE (EXPANDIDO) -->
+        <div class="panel-body animate-slide-up" *ngIf="alumnoSeleccionadoId === alumno.id" (click)="$event.stopPropagation()" style="width: 100%; text-align: left; padding-top: 1.5rem; margin-top: 1.5rem; border-top: 1px solid rgba(0,0,0,0.05);">
+          <h4 style="margin-top: 0; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; color: var(--text-dark); font-size: 1.1rem;"><i class="fa-solid fa-chart-line" style="color: var(--primary-color);"></i> Avance de Tareas</h4>
+
+          <div class="flashcards-list" *ngIf="getLeccionesDeHijo(alumno.id).length > 0; else sinLecciones">
+            <div class="leccion-flashcards" *ngFor="let lec of getLeccionesDeHijo(alumno.id)" style="margin-bottom: 1rem; background: rgba(248, 250, 252, 0.8); padding: 1rem; border-radius: 12px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);">
+              <h5 style="margin-top: 0; margin-bottom: 0.75rem; color: var(--text-dark); font-weight: 600;">{{ lec.titulo }}</h5>
+              <div *ngFor="let fc of getFlashcardsDeLeccion(lec.id)" style="display: flex; gap: 0.75rem; align-items: flex-start; margin-bottom: 0.5rem; font-size: 0.95rem; color: var(--text-secondary);">
+                <span *ngIf="leccionCompletada(lec.id, alumno.id)" style="color: #10b981;"><i class="fa-solid fa-check-circle"></i></span>
+                <span *ngIf="!leccionCompletada(lec.id, alumno.id)" style="color: #f59e0b;"><i class="fa-solid fa-hourglass-half"></i></span>
+                <span style="flex: 1; line-height: 1.4;">{{ fc.preguntaTexto }}</span>
+              </div>
+            </div>
+          </div>
+          <ng-template #sinLecciones>
+            <p style="color: #64748b; font-style: italic;"><i class="fa-solid fa-folder-open"></i> No tiene lecciones asignadas aún.</p>
+          </ng-template>
+        </div>
+      </div>
+      
+      <!-- EMPTY STATE -->
+      <div class="empty-state-modern" *ngIf="alumnos.length === 0" style="grid-column: 1 / -1; background: rgba(255,255,255,0.6); padding: 4rem 2rem; border-radius: 1.5rem; text-align: center; border: 2px dashed rgba(0,0,0,0.1);">
+        <div class="empty-icon" style="font-size: 4rem; color: var(--text-secondary); margin-bottom: 1.5rem;"><i class="fa-solid" [ngClass]="esPadre ? 'fa-children' : 'fa-users-slash'"></i></div>
+        <h2 style="font-size: 1.8rem; color: var(--text-dark); margin-bottom: 0.5rem;">{{ esPadre ? 'Aún no has registrado a tus hijos' : 'Aún no tienes alumnos' }}</h2>
+        <p style="color: var(--text-secondary); font-size: 1.1rem;">{{ esPadre ? 'Cuando registres a tus hijos desde el portal, aparecerán aquí con todo su progreso.' : 'Los estudiantes registrados por los padres aparecerán aquí.' }}</p>
+      </div>
+    </section>
+  </ng-container>
+</div>
+
