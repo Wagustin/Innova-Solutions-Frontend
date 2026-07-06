@@ -46,6 +46,13 @@ export class AuthService {
           else if (rol === 'PADRE' || rol === 'TUTOR') localStorage.setItem('rolId', '2');
           else if (rol === 'ALUMNO') localStorage.setItem('rolId', '3');
         }
+        if (body && body.fotoPerfil) {
+          localStorage.setItem('fotoPerfil', body.fotoPerfil);
+        }
+        if (body && body.nombreCompleto) {
+          localStorage.setItem('nombreCompleto', body.nombreCompleto);
+        }
+        }
         return body;
       })
     );

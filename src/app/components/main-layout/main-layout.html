@@ -22,10 +22,8 @@
 
   <div class="nav-profile" #profileMenuContainer>
     <button class="avatar-btn" (click)="toggleProfileMenu()">
-      <div class="css-avatar-small">
-        <div class="head"></div>
-        <div class="body"></div>
-      </div>
+      <span *ngIf="esAlumno" style="font-size: 1.6rem;">{{ fotoPerfil }}</span>
+      <span *ngIf="!esAlumno" class="avatar-inicial" [ngClass]="esPadre ? 'bg-padre' : 'bg-profesor'">{{ inicial }}</span>
     </button>
     
     <div class="profile-dropdown" *ngIf="isProfileMenuOpen">

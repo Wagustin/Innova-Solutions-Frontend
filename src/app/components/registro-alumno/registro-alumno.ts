@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { ApiDataService } from '../../services/api-data.service';
+
+const ANIMALES = ['🐶','🐱','🐼','🦊','🐸','🦁','🐯','🐰','🐵','🐮','🐷','🦄','🐙','🦋','🐢','🦉','🐺','🦝','🐴','🐔','🐧','🐨','🦖','🐲'];
 
 @Component({
   selector: 'app-registro-alumno',
@@ -38,7 +40,8 @@ export class RegistroAlumno implements OnInit {
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private apiService: ApiDataService
+    private apiService: ApiDataService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -160,6 +163,10 @@ export class RegistroAlumno implements OnInit {
 
   chequearCargaCompleta(): void {
     this.loaded = true;
+  }
+
+  getAvatar(hijo: any): string {
+    return hijo.fotoPerfil || ANIMALES[(hijo.id * 7 + 13) % ANIMALES.length];
   }
 
   // Children interaction methods
@@ -284,20 +291,43 @@ export class RegistroAlumno implements OnInit {
 
     const payload = {
       username: this.alumnoForm.value.nickname,
-      pin: this.alumnoForm.value.pin
+      pin: this.alumnoForm.value.pin,
+      fotoPerfil: ANIMALES[this.hijos.length % ANIMALES.length]
     };
 
     this.apiService.registrarAlumno(payload).subscribe({
       next: (res) => {
+        const animal = ANIMALES[(res.id * 7 + 13) % ANIMALES.length];
+        res.fotoPerfil = animal;
+        this.apiService.actualizarUsuario(res.id, {
+          nombreCompleto: res.nombreCompleto || res.username,
+          username: res.username,
+          correoElectronico: res.correoElectronico || `${res.username}@student.innova.com`,
+          contrasena: payload.pin,
+          metodoRegistro: 'PADRE',
+          rolId: res.rol?.id || 3,
+          planSuscripcionId: res.planSuscripcion?.id || null,
+          fotoPerfil: animal
+        }).subscribe();
         this.hijos.push(res);
         this.registrationSuccess = true;
         this.alumnoForm.disable();
-        setTimeout(() => { this.volverMenu(); }, 1500);
+        setTimeout(() => {
+          this.vista = 'lista';
+          this.hijoSeleccionadoId = null;
+          this.hijoEditandoId = null;
+          this.registrationSuccess = false;
+          this.cdr.detectChanges();
+        }, 1500);
       },
       error: (err) => {
         console.error('Error al registrar alumno:', err);
-        const msg = err.error?.message || err.error?.error || err.message;
-        this.serverErrorMessage = msg || 'Error al comunicarse con el servidor';
+        const msg = (err.error?.message || err.error?.error || err.message || '').toLowerCase();
+        if (msg.includes('ya existe') || msg.includes('already exists') || msg.includes('duplicate') || msg.includes('username')) {
+          this.serverErrorMessage = 'Elige otro nombre de usuario, ese ya está en uso.';
+        } else {
+          this.serverErrorMessage = msg || 'Error al comunicarse con el servidor';
+        }
       }
     });
   }

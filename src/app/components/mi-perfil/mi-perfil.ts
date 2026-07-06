@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ApiDataService } from '../../services/api-data.service';
 
+const ANIMALES = ['🐶','🐱','🐼','🦊','🐸','🦁','🐯','🐰','🐵','🐮','🐷','🦄','🐙','🦋','🐢','🦉','🐺','🦝','🐴','🐔','🐧','🐨','🦖','🐲'];
+
 @Component({
   selector: 'app-mi-perfil',
   standalone: true,
@@ -19,6 +21,20 @@ export class MiPerfil implements OnInit {
   serverErrorMessage = '';
   showAvatarModal = false;
   isDragOver = false;
+
+  get esAlumno(): boolean {
+    return (localStorage.getItem('rol') || '').toUpperCase().replace(/^ROLE_/, '') === 'ALUMNO';
+  }
+
+  get esPadre(): boolean {
+    const rol = (localStorage.getItem('rol') || '').toUpperCase().replace(/^ROLE_/, '');
+    return rol === 'PADRE' || rol === 'TUTOR' || localStorage.getItem('rolId') === '2';
+  }
+
+  get inicial(): string {
+    const nombre = localStorage.getItem('nombreCompleto') || localStorage.getItem('username') || '';
+    return nombre.charAt(0).toUpperCase() || '?';
+  }
 
   get isAnyFieldEnabled(): boolean {
     return Object.values(this.perfilForm.controls).some(c => c.enabled);
@@ -44,10 +60,10 @@ export class MiPerfil implements OnInit {
     if (storedId && storedId !== 'undefined' && storedId !== 'null') {
       this.userId = parseInt(storedId, 10);
       if (isNaN(this.userId)) {
-          // Si el ID extraído no es un número (por ejemplo, es un string con username)
-          this.userId = 1; // fallback
+          this.userId = 1;
       }
     }
+    this.fotoPerfil = ANIMALES[(this.userId * 7 + 13) % ANIMALES.length];
     
     this.perfilForm = this.fb.group({
       nombreCompleto: ['', [Validators.required, Validators.minLength(3)]],
@@ -104,6 +120,13 @@ export class MiPerfil implements OnInit {
     delete resWithoutPass.contrasena;
     this.originalProfileData = resWithoutPass;
     this.perfilForm.patchValue(resWithoutPass);
+    if (res.nombreCompleto) {
+      localStorage.setItem('nombreCompleto', res.nombreCompleto);
+    }
+    this.fotoPerfil = res.fotoPerfil || ANIMALES[(this.userId * 7 + 13) % ANIMALES.length] || null;
+    if (this.fotoPerfil) {
+      localStorage.setItem('fotoPerfil', this.fotoPerfil);
+    }
   }
 
   onSave() {

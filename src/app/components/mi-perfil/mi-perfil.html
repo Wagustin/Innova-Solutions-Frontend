@@ -2,11 +2,8 @@
   <div class="perfil-card">
     <div class="perfil-header">
       <div class="avatar-container" (click)="showAvatarModal = true">
-        <img *ngIf="fotoPerfil" [src]="fotoPerfil" alt="Avatar" class="avatar-img" />
-        <div *ngIf="!fotoPerfil" class="css-avatar">
-          <div class="head"></div>
-          <div class="body"></div>
-        </div>
+        <div *ngIf="esAlumno" class="avatar-emoji">{{ fotoPerfil }}</div>
+        <div *ngIf="!esAlumno" class="avatar-inicial" [ngClass]="esPadre ? 'bg-padre' : 'bg-profesor'">{{ inicial }}</div>
         <button type="button" class="edit-avatar-btn">
           <div class="css-camera"></div>
         </button>
@@ -16,7 +13,7 @@
     </div>
 
     <form [formGroup]="perfilForm" (ngSubmit)="onSave()" class="perfil-form">
-      <div class="form-group">
+      <div class="form-group" *ngIf="!esAlumno">
         <label>Nombre Completo</label>
         <div class="input-wrapper">
           <input type="text" formControlName="nombreCompleto" placeholder="Ej. Ana Pérez" />
