@@ -2,6 +2,8 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ApiDataService } from '../../services/api-data.service';
 
+const ANIMALES = ['🐶','🐱','🐼','🦊','🐸','🦁','🐯','🐰','🐵','🐮','🐷','🦄','🐙','🦋','🐢','🦉','🐺','🦝','🐴','🐔','🐧','🐨','🦖','🐲'];
+
 @Component({
   selector: 'app-mis-alumnos',
   standalone: true,
@@ -48,10 +50,10 @@ export class MisAlumnosComponent implements OnInit {
               )
               .map(u => u.id);
           
-          // 2. Filtrar a los ALUMNOS que fueron creados por esos PADRES
+          // 2. Filtrar a los ALUMNOS que fueron creados por esos PADRES o creados directamente por el profesor
           this.alumnos = res.filter(u => {
             const isAlumno = u.rol?.id === 3 || (u.rol?.nombre || u.rol?.name || '').toUpperCase().includes('ALUMNO');
-            return isAlumno && u.creadoPorId != null && misPadresIds.includes(u.creadoPorId);
+            return isAlumno && (u.creadoPorId == this.userId || (u.creadoPorId != null && misPadresIds.includes(u.creadoPorId)));
           });
         } else if (miRol === 'PADRE') {
           // Filtrar a los ALUMNOS que fueron creados directamente por ESTE PADRE
@@ -125,6 +127,14 @@ export class MisAlumnosComponent implements OnInit {
       return this.flashcards.filter(f => f.id === 1 || f.id === 2 || f.id === 3);
     }
     return fcs;
+  }
+
+  getAvatar(user: any): string {
+    const id = user.id;
+    if (id != null && !isNaN(Number(id))) {
+      return ANIMALES[(Number(id) * 7 + 13) % ANIMALES.length];
+    }
+    return '🐶';
   }
 
   leccionCompletada(leccionId: number, hijoId: number): boolean {
