@@ -1,13 +1,13 @@
 <div class="flashcards-container">
   
   <div class="toolbar">
-    <input type="text" class="search-bar" placeholder="Buscar flashcards...">
+    <input type="text" class="search-bar" placeholder="Buscar flashcards..." (input)="filtro = $any($event.target).value">
     <div class="actions">
-      <button class="action-btn" title="Ordenar A-Z">A-Z</button>
-      <button class="action-btn" title="Editar">
+      <button class="action-btn" title="Ordenar A-Z" (click)="toggleOrden()">{{ ordenAscendente ? 'A-Z' : 'Z-A' }}</button>
+      <button class="action-btn" title="Editar" (click)="editarSeleccionadas()" *ngIf="rol === 'PROFESOR'">
         <span class="css-icon css-icon-pencil css-icon-anim"></span>
       </button>
-      <button class="action-btn" title="Eliminar">
+      <button class="action-btn" title="Eliminar" (click)="eliminarSeleccionadas()" *ngIf="rol === 'PROFESOR'">
         <span class="css-icon css-icon-trash css-icon-anim"></span>
       </button>
     </div>
@@ -16,10 +16,11 @@
   <div *ngIf="loading" class="state-msg">Cargando...</div>
   <div *ngIf="errorMsg" class="state-msg error">{{ errorMsg }}</div>
   <div *ngIf="!loading && !errorMsg && flashcards.length === 0" class="state-msg empty">No hay flashcards todavía. Creá una desde el panel de creación.</div>
+  <div *ngIf="!loading && !errorMsg && flashcards.length > 0 && flashcardsFiltradas.length === 0" class="state-msg empty">No se encontraron flashcards con ese nombre.</div>
 
   <div class="flashcards-grid" *ngIf="flashcards.length > 0">
-    <div *ngFor="let card of flashcards" class="flashcard" [style.backgroundColor]="card.colorFondo || 'var(--bg-pastel-yellow)'">
-      <input type="checkbox" class="card-checkbox">
+    <div *ngFor="let card of flashcardsFiltradas" class="flashcard" [style.backgroundColor]="card.colorFondo || 'var(--bg-pastel-yellow)'" (click)="irAResponder(card.id)">
+      <input type="checkbox" class="card-checkbox" (click)="$event.stopPropagation()" [checked]="seleccionadas.has(card.id)" (change)="toggleSeleccion(card.id)">
       <div class="card-header">
         <h3 [style.color]="card.colorTexto || 'var(--text-dark)'">{{ card.leccion?.titulo || 'Lección' }}</h3>
         <span>ID: {{ card.id }}</span>
@@ -51,9 +52,7 @@
       </div>
       
       <div class="card-actions">
-        <button class="btn btn-black" (click)="evaluate(card)" [disabled]="!card.selectedOption || card.isAnswered">
-          {{ card.isAnswered ? 'Respondido' : 'Ver respuesta' }}
-        </button>
+        <button class="btn btn-black" (click)="$event.stopPropagation(); irAResponder(card.id)">Responder →</button>
       </div>
     </div>
   </div>

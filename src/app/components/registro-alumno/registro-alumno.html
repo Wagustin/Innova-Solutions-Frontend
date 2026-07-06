@@ -91,7 +91,7 @@
       </button>
     </form>
 
-    <p class="link-text" (click)="volverMenu()">
+    <p class="link-text" *ngIf="!registrationSuccess" (click)="volverMenu()">
       ← Volver al menú
     </p>
   </div>
@@ -121,7 +121,6 @@
     </div>
 
     <div *ngIf="loaded" style="width: 100%;">
-      <!-- Listado de perfiles clickeables -->
       <div class="hijos-profiles" *ngIf="hijos.length > 0">
         <div class="hijo-profile-card" 
              *ngFor="let hijo of hijos" 
@@ -142,41 +141,37 @@
             <span class="expand-indicator">{{ hijoSeleccionadoId === hijo.id ? '▼' : '▶' }}</span>
           </div>
 
-          <!-- Detalles del perfil (avances y edición) -->
           <div class="profile-details" *ngIf="hijoSeleccionadoId === hijo.id" (click)="$event.stopPropagation()">
             
-            <!-- Avance -->
             <div class="details-section progress-section">
               <h4>Avance de Tareas</h4>
-              <div class="class-status" *ngIf="!estaEnClase(hijo.id)">
-                <span class="status-badge error">
+
+              <div class="class-status">
+                <span class="status-badge" [class.success]="estaEnClase(hijo.id)" [class.error]="!estaEnClase(hijo.id)">
                   <span class="badge-content">
-                    <span class="css-icon icon-warning"></span>
-                    No tiene clase aún
+                    <span class="css-icon" [class.icon-check]="estaEnClase(hijo.id)" [class.icon-warning]="!estaEnClase(hijo.id)"></span>
+                    {{ estaEnClase(hijo.id) ? 'En clase' : 'Sin clase asignada' }}
                   </span>
                 </span>
               </div>
-              <div class="class-status" *ngIf="estaEnClase(hijo.id)">
-                <span class="status-badge success">
-                  <span class="badge-content">
-                    <span class="css-icon icon-check"></span>
-                    En clase
-                  </span>
-                </span>
-                <div class="progress-ratio">
-                  <span class="ratio-lbl">Flashcards Completadas:</span>
-                  <span class="ratio-val" [class.completed]="getFlashcardsProgreso(hijo.id) === 'No tiene pendientes'">
-                    {{ getFlashcardsProgreso(hijo.id) }}
-                  </span>
+
+              <div class="flashcards-list" *ngIf="getLeccionesDeHijo(hijo.id).length > 0; else sinLecciones">
+                <div class="leccion-flashcards" *ngFor="let lec of getLeccionesDeHijo(hijo.id)">
+                  <h5 class="leccion-titulo">{{ lec.titulo }}</h5>
+                  <div class="flashcard-item" *ngFor="let fc of getFlashcardsDeLeccion(lec.id)">
+                    <span class="fc-status-icon">{{ leccionCompletada(lec.id, hijo.id) ? '✅' : '⏳' }}</span>
+                    <span class="fc-pregunta">{{ fc.preguntaTexto }}</span>
+                  </div>
                 </div>
               </div>
+              <ng-template #sinLecciones>
+                <p class="sin-lecciones-msg">No tiene lecciones asignadas aún.</p>
+              </ng-template>
             </div>
 
-            <!-- Datos del Perfil / Edición -->
             <div class="details-section edit-section">
               <h4>Datos del Perfil</h4>
 
-              <!-- Formulario de Edición -->
               <div class="edit-form" *ngIf="hijoEditandoId === hijo.id">
                 <div class="form-input-group">
                   <label>Nombre Completo</label>
@@ -196,7 +191,6 @@
                 </div>
               </div>
 
-              <!-- Datos de Solo Lectura -->
               <div class="read-info" *ngIf="hijoEditandoId !== hijo.id">
                 <div class="info-row">
                   <span class="info-lbl">Nombre:</span>

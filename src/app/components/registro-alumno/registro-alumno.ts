@@ -26,6 +26,7 @@ export class RegistroAlumno implements OnInit {
   progresos: any[] = [];
   relaciones: any[] = [];
   lecciones: any[] = [];
+  flashcards: any[] = [];
   loaded = false;
 
   // Selected child and inline editing state
@@ -34,7 +35,6 @@ export class RegistroAlumno implements OnInit {
   editNombreCompleto = '';
   editUsername = '';
   editPassword = '';
-
   constructor(
     private fb: FormBuilder,
     private router: Router,
@@ -56,6 +56,8 @@ export class RegistroAlumno implements OnInit {
     this.serverErrorMessage = '';
   }
 
+  vista: 'menu' | 'registro' | 'lista' = 'menu';
+
   // Navigation methods
   irARegistro(): void {
     this.inicializarFormulario();
@@ -64,9 +66,7 @@ export class RegistroAlumno implements OnInit {
 
   irALista(): void {
     this.vista = 'lista';
-    if (this.hijos.length === 0) {
-      this.cargarDatos();
-    }
+    this.cargarDatos();
   }
 
   volverMenu(): void {
@@ -149,6 +149,13 @@ export class RegistroAlumno implements OnInit {
         this.chequearCargaCompleta();
       }
     });
+
+    this.apiService.getFlashcards().subscribe({
+      next: (data) => {
+        this.flashcards = data ?? [];
+      },
+      error: (err) => console.error('Error al cargar flashcards:', err)
+    });
   }
 
   chequearCargaCompleta(): void {
@@ -162,7 +169,22 @@ export class RegistroAlumno implements OnInit {
   }
 
   estaEnClase(hijoId: number): boolean {
-    return this.relaciones.some((r: any) => r.estudiante && r.estudiante.id === hijoId);
+    return this.relaciones.some((r: any) => r.estudiante && r.estudiante.id === hijoId)
+      || this.getLeccionesDeHijo(hijoId).length > 0;
+  }
+
+  getLeccionesDeHijo(hijoId: number): any[] {
+    return this.lecciones.filter((l: any) => l.estudiante && l.estudiante.id === hijoId);
+  }
+
+  getFlashcardsDeLeccion(leccionId: number): any[] {
+    return this.flashcards.filter((f: any) => f.leccion && f.leccion.id === leccionId);
+  }
+
+  leccionCompletada(leccionId: number, hijoId: number): boolean {
+    return this.progresos.some(
+      (p: any) => p.leccion && p.leccion.id === leccionId && p.estudiante && p.estudiante.id === hijoId
+    );
   }
 
   getFlashcardsProgreso(hijoId: number): string {
@@ -223,7 +245,7 @@ export class RegistroAlumno implements OnInit {
       nombreCompleto: this.editNombreCompleto.trim(),
       username: this.editUsername.trim(),
       correoElectronico: hijo.correoElectronico || `${this.editUsername.trim()}@student.innova.com`,
-      contrasena: newPass !== '' ? newPass : 'dummyPassword123', // ponytail: envía la nueva contraseña o el dummy pass
+      contrasena: newPass !== '' ? newPass : 'dummyPassword123',
       metodoRegistro: hijo.metodoRegistro || 'PADRE',
       rolId: hijo.rol ? hijo.rol.id : 3,
       planSuscripcionId: hijo.planSuscripcion ? hijo.planSuscripcion.id : null,
@@ -270,9 +292,7 @@ export class RegistroAlumno implements OnInit {
         this.hijos.push(res);
         this.registrationSuccess = true;
         this.alumnoForm.disable();
-        setTimeout(() => {
-          this.irALista();
-        }, 1500);
+        setTimeout(() => { this.cargarDatos(); this.volverMenu(); }, 1500);
       },
       error: (err) => {
         console.error('Error al registrar alumno:', err);
@@ -282,7 +302,5 @@ export class RegistroAlumno implements OnInit {
     });
   }
 
-  volverDashboard(): void {
-    this.router.navigate(['/padre/dashboard']);
-  }
+
 }

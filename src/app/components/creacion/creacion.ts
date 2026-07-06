@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ApiDataService } from '../../services/api-data.service';
 
 @Component({
@@ -20,13 +21,21 @@ export class Creacion implements OnInit {
   temas: any[] = [];
   lecciones: any[] = [];
   flashcards: any[] = [];
+  alumnos: any[] = [];
 
   imagenUrl = '';
   imagenPreview = '';
   imagenSubiendo = false;
   archivoSeleccionado: File | null = null;
+  editId: number | null = null;
+  modalAbierto: 'cat' | 'tema' | 'leccion' | 'flashcard' | null = null;
 
-  constructor(private fb: FormBuilder, private api: ApiDataService) {}
+  constructor(
+    private fb: FormBuilder,
+    private api: ApiDataService,
+    private route: ActivatedRoute,
+    private router: Router
+  ) {}
 
   ngOnInit() {
     this.catForm = this.fb.group({
@@ -41,7 +50,8 @@ export class Creacion implements OnInit {
 
     this.leccionForm = this.fb.group({
       temaId: ['', Validators.required],
-      titulo: ['', [Validators.required, Validators.minLength(3)]]
+      titulo: ['', [Validators.required, Validators.minLength(3)]],
+      estudianteId: ['', Validators.required]
     });
 
     this.flashcardForm = this.fb.group({
@@ -56,6 +66,34 @@ export class Creacion implements OnInit {
     });
 
     this.loadData();
+
+    const editParam = this.route.snapshot.queryParamMap.get('edit');
+    if (editParam) {
+      this.editId = Number(editParam);
+      this.api.getFlashcard(this.editId).subscribe({
+        next: (f) => {
+          this.flashcardForm.patchValue({
+            leccionId: f.leccion?.id ?? f.leccionId,
+            preguntaTexto: f.preguntaTexto,
+          });
+          if (f.opciones?.length > 0) {
+            this.flashcardForm.patchValue({
+              resp1: f.opciones[0].textoOpcion,
+              resp1Correcta: f.opciones[0].esCorrecta,
+              resp1Feedback: f.opciones[0].feedbackRespuesta,
+            });
+          }
+          if (f.opciones?.length > 1) {
+            this.flashcardForm.patchValue({
+              resp2: f.opciones[1].textoOpcion,
+              resp2Correcta: f.opciones[1].esCorrecta,
+              resp2Feedback: f.opciones[1].feedbackRespuesta,
+            });
+          }
+          this.imagenUrl = f.imagenUrl || '';
+        }
+      });
+    }
   }
 
   loadData() {
@@ -63,6 +101,9 @@ export class Creacion implements OnInit {
     this.api.getTemas().subscribe(res => this.temas = res);
     this.api.getLecciones().subscribe(res => this.lecciones = res);
     this.api.getFlashcards().subscribe(res => this.flashcards = res);
+    this.api.getUsuarios().subscribe(res => {
+      this.alumnos = res.filter((u: any) => u.rol?.id === 3);
+    });
   }
 
   saveCat() {
@@ -85,11 +126,11 @@ export class Creacion implements OnInit {
 
   saveLeccion() {
     if(this.leccionForm.valid) {
+      const userId = localStorage.getItem('userId');
       const payload = {
         ...this.leccionForm.value,
         dificultad: 'Fácil',
-        creadorId: 1, // Mock user ID (puede venir del jwt)
-        estudianteId: 1 // Mock estudiante ID
+        creadorId: userId ? Number(userId) : 1
       };
       this.api.crearLeccion(payload).subscribe({
         next: (res) => { this.loadData(); this.leccionForm.reset(); },
@@ -123,7 +164,7 @@ export class Creacion implements OnInit {
   saveFlashcard() {
     if(this.flashcardForm.valid) {
       const form = this.flashcardForm.value;
-      const payload = {
+      const payload: any = {
         preguntaTexto: form.preguntaTexto,
         imagenUrl: this.imagenUrl,
         colorFondo: '#fdf7c3',
@@ -134,12 +175,37 @@ export class Creacion implements OnInit {
           { textoOpcion: form.resp2, esCorrecta: form.resp2Correcta, feedbackRespuesta: form.resp2Feedback || 'Sin feedback' }
         ]
       };
-      
-      this.api.crearFlashcardConOpciones(payload).subscribe({
-        next: () => { this.loadData(); this.flashcardForm.reset(); this.imagenUrl = ''; this.imagenPreview = ''; this.archivoSeleccionado = null; },
-        error: (err) => console.error(err)
-      });
+
+      if (this.editId) {
+        this.api.actualizarFlashcard(this.editId, {
+          preguntaTexto: form.preguntaTexto,
+          imagenUrl: this.imagenUrl,
+          colorFondo: '#fdf7c3',
+          colorTexto: '#2c3e50',
+          leccionId: form.leccionId
+        }).subscribe({
+          next: () => { this.loadData(); this.flashcardForm.reset(); this.imagenUrl = ''; this.editId = null; },
+          error: (err) => console.error(err)
+        });
+      } else {
+        this.api.crearFlashcardConOpciones(payload).subscribe({
+          next: () => { this.loadData(); this.flashcardForm.reset(); this.imagenUrl = ''; this.imagenPreview = ''; this.archivoSeleccionado = null; },
+          error: (err) => console.error(err)
+        });
+      }
     }
+  }
+
+  abrirModal(tipo: 'cat' | 'tema' | 'leccion' | 'flashcard'): void {
+    this.modalAbierto = tipo;
+    if (tipo === 'cat') this.catForm.reset({iconoUrl: 'https://ejemplo.com/icono.png'});
+    else if (tipo === 'tema') this.temaForm.reset();
+    else if (tipo === 'leccion') this.leccionForm.reset();
+    else if (tipo === 'flashcard') { this.flashcardForm.reset(); this.imagenUrl = ''; this.imagenPreview = ''; }
+  }
+
+  cerrarModal(): void {
+    this.modalAbierto = null;
   }
 
   getCatName(id: number) {

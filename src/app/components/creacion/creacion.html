@@ -1,139 +1,174 @@
 <div class="creacion-container">
   
-  <h2 class="section-title">PANEL DE CREACIÓN 🛠️</h2>
+  <h2 class="section-title">{{ editId ? 'EDITAR FLASHCARD' : 'PANEL DE CREACIÓN' }}</h2>
 
   <div class="split-layout">
     
-    <!-- Columna Izquierda: Formularios -->
+    <!-- Columna Izquierda: Botones que abren modales -->
     <div class="left-col">
-      <div class="timeline-line"></div>
-
-      <!-- CATEGORIA -->
-      <div class="form-card bg-pastel-yellow">
-        <div class="timeline-dot"></div>
-        <h3>CATEGORÍA</h3>
-        <form [formGroup]="catForm" (ngSubmit)="saveCat()">
-          <div class="form-group">
-            <label>Nombre de Categoría</label>
-            <input type="text" formControlName="nombre" class="form-control" placeholder="Ej. Ciencias">
-          </div>
-          <div class="form-group">
-            <label>URL del Icono</label>
-            <input type="text" formControlName="iconoUrl" class="form-control" placeholder="https://...">
-          </div>
-          <button class="btn btn-black">Guardar Categoría</button>
-        </form>
+      <div class="modal-cards">
+        <div class="modal-card bg-pastel-yellow" (click)="abrirModal('cat')">
+          <span class="modal-card-icon">📁</span>
+          <span class="modal-card-label">Categoría</span>
+          <span class="modal-card-arrow">+</span>
+        </div>
+        <div class="modal-card bg-pastel-blue" (click)="abrirModal('tema')">
+          <span class="modal-card-icon">📂</span>
+          <span class="modal-card-label">Tema</span>
+          <span class="modal-card-arrow">+</span>
+        </div>
+        <div class="modal-card bg-pastel-yellow" (click)="abrirModal('leccion')">
+          <span class="modal-card-icon">📖</span>
+          <span class="modal-card-label">Lección</span>
+          <span class="modal-card-arrow">+</span>
+        </div>
+        <div class="modal-card bg-pastel-blue" (click)="abrirModal('flashcard')">
+          <span class="modal-card-icon">🃏</span>
+          <span class="modal-card-label">Flashcard</span>
+          <span class="modal-card-arrow">+</span>
+        </div>
       </div>
+    </div>
 
-      <!-- TEMA -->
-      <div class="form-card bg-pastel-blue">
-        <div class="timeline-dot"></div>
-        <h3>TEMA</h3>
-        <form [formGroup]="temaForm" (ngSubmit)="saveTema()">
-          <div class="form-group">
-            <label>Categoría</label>
-            <select formControlName="categoriaId" class="form-control">
-              <option value="">Seleccione...</option>
-              <option *ngFor="let c of categorias" [value]="c.id">{{c.nombre}}</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>Nombre del Tema</label>
-            <input type="text" formControlName="nombre" class="form-control" placeholder="Ej. Biología">
-          </div>
-          <button class="btn btn-black">Guardar Tema</button>
-        </form>
-      </div>
+    <!-- Modal overlay -->
+    <div class="modal-overlay" *ngIf="modalAbierto" (click)="cerrarModal()">
+      <div class="modal-content" (click)="$event.stopPropagation()">
 
-      <!-- LECCION -->
-      <div class="form-card bg-pastel-yellow">
-        <div class="timeline-dot"></div>
-        <h3>LECCIÓN</h3>
-        <form [formGroup]="leccionForm" (ngSubmit)="saveLeccion()">
-          <div class="form-group">
-            <label>Tema</label>
-            <select formControlName="temaId" class="form-control">
-              <option value="">Seleccione...</option>
-              <option *ngFor="let t of temas" [value]="t.id">{{t.nombre}}</option>
-            </select>
+        <!-- Modal CATEGORÍA -->
+        <div *ngIf="modalAbierto === 'cat'">
+          <div class="modal-header">
+            <h3>📁 Nueva Categoría</h3>
+            <button class="modal-close" (click)="cerrarModal()">✕</button>
           </div>
-          <div class="form-group">
-            <label>Título de la Lección</label>
-            <input type="text" formControlName="titulo" class="form-control" placeholder="Ej. La Célula">
-          </div>
-          <button class="btn btn-black">Guardar Lección</button>
-        </form>
-      </div>
-
-      <!-- FLASHCARD -->
-      <div class="form-card bg-pastel-blue">
-        <div class="timeline-dot"></div>
-        <h3>FLASHCARD</h3>
-        <p class="form-hint">Creá una pregunta con sus opciones de respuesta para la lección.</p>
-        <form [formGroup]="flashcardForm" (ngSubmit)="saveFlashcard()">
-          <div class="form-group">
-            <label>Lección</label>
-            <select formControlName="leccionId" class="form-control">
-              <option value="">Seleccione...</option>
-              <option *ngFor="let l of lecciones" [value]="l.id">{{l.titulo}}</option>
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label>Pregunta</label>
-            <input type="text" formControlName="preguntaTexto" class="form-control" placeholder="Ej. ¿Cuál es la capital de Perú?">
-          </div>
-
-          <div class="form-group">
-            <label>Imagen (opcional)</label>
-            <div class="image-input-row">
-              <input type="file" (change)="onFileSelected($event)" accept="image/*" class="form-control file-input">
-              <span class="image-sep">o</span>
-              <input type="text" (input)="onUrlPasted($event)" placeholder="Pegá una URL..." class="form-control url-input">
+          <form [formGroup]="catForm" (ngSubmit)="saveCat(); cerrarModal()">
+            <div class="form-group">
+              <label>Nombre de Categoría</label>
+              <input type="text" formControlName="nombre" class="form-control" placeholder="Ej. Ciencias">
             </div>
-            <span *ngIf="imagenSubiendo" class="upload-status">Subiendo...</span>
-            <span *ngIf="imagenUrl && !imagenPreview" class="upload-status done">✓ URL cargada</span>
-            <img *ngIf="imagenPreview" [src]="imagenPreview" class="upload-preview">
+            <div class="form-group">
+              <label>URL del Icono</label>
+              <input type="text" formControlName="iconoUrl" class="form-control" placeholder="https://...">
+            </div>
+            <button class="btn btn-black">Guardar Categoría</button>
+          </form>
+        </div>
+
+        <!-- Modal TEMA -->
+        <div *ngIf="modalAbierto === 'tema'">
+          <div class="modal-header">
+            <h3>📂 Nuevo Tema</h3>
+            <button class="modal-close" (click)="cerrarModal()">✕</button>
           </div>
+          <form [formGroup]="temaForm" (ngSubmit)="saveTema(); cerrarModal()">
+            <div class="form-group">
+              <label>Categoría</label>
+              <select formControlName="categoriaId" class="form-control">
+                <option value="">Seleccione...</option>
+                <option *ngFor="let c of categorias" [value]="c.id">{{c.nombre}}</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Nombre del Tema</label>
+              <input type="text" formControlName="nombre" class="form-control" placeholder="Ej. Biología">
+            </div>
+            <button class="btn btn-black">Guardar Tema</button>
+          </form>
+        </div>
 
-          <div class="answers-section">
-            <h4>Opciones de Respuesta</h4>
+        <!-- Modal LECCIÓN -->
+        <div *ngIf="modalAbierto === 'leccion'">
+          <div class="modal-header">
+            <h3>📖 Nueva Lección</h3>
+            <button class="modal-close" (click)="cerrarModal()">✕</button>
+          </div>
+          <form [formGroup]="leccionForm" (ngSubmit)="saveLeccion(); cerrarModal()">
+            <div class="form-group">
+              <label>Tema</label>
+              <select formControlName="temaId" class="form-control">
+                <option value="">Seleccione...</option>
+                <option *ngFor="let t of temas" [value]="t.id">{{t.nombre}}</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Título de la Lección</label>
+              <input type="text" formControlName="titulo" class="form-control" placeholder="Ej. La Célula">
+            </div>
+            <div class="form-group">
+              <label>Asignar a Alumno</label>
+              <select formControlName="estudianteId" class="form-control">
+                <option value="">Seleccione un alumno...</option>
+                <option *ngFor="let a of alumnos" [value]="a.id">{{ a.nombreCompleto || a.username }} (@{{ a.username }})</option>
+              </select>
+            </div>
+            <button class="btn btn-black">Guardar Lección</button>
+          </form>
+        </div>
 
-            <div class="answer-box">
-              <div class="form-group">
-                <label>Opción A</label>
-                <input type="text" formControlName="resp1" class="form-control" placeholder="Ej. Lima">
+        <!-- Modal FLASHCARD -->
+        <div *ngIf="modalAbierto === 'flashcard'">
+          <div class="modal-header">
+            <h3>🃏 {{ editId ? 'Editar' : 'Nueva' }} Flashcard</h3>
+            <button class="modal-close" (click)="cerrarModal()">✕</button>
+          </div>
+          <form [formGroup]="flashcardForm" (ngSubmit)="saveFlashcard(); cerrarModal()">
+            <div class="form-group">
+              <label>Lección</label>
+              <select formControlName="leccionId" class="form-control">
+                <option value="">Seleccione...</option>
+                <option *ngFor="let l of lecciones" [value]="l.id">{{l.titulo}}</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Pregunta</label>
+              <input type="text" formControlName="preguntaTexto" class="form-control" placeholder="Ej. ¿Cuál es la capital de Perú?">
+            </div>
+            <div class="form-group">
+              <label>Imagen (opcional)</label>
+              <div class="image-input-row">
+                <input type="file" (change)="onFileSelected($event)" accept="image/*" class="form-control file-input">
+                <span class="image-sep">o</span>
+                <input type="text" (input)="onUrlPasted($event)" placeholder="Pegá una URL..." class="form-control url-input">
               </div>
-              <div class="check-group">
-                <input type="checkbox" formControlName="resp1Correcta" id="resp1Correcta">
-                <label for="resp1Correcta">✅ Correcta</label>
+              <span *ngIf="imagenSubiendo" class="upload-status">Subiendo...</span>
+              <span *ngIf="imagenUrl && !imagenPreview" class="upload-status done">✓ URL cargada</span>
+              <img *ngIf="imagenPreview" [src]="imagenPreview" class="upload-preview">
+            </div>
+            <div class="answers-section">
+              <h4>Opciones de Respuesta</h4>
+              <div class="answer-box">
+                <div class="form-group">
+                  <label>Opción A</label>
+                  <input type="text" formControlName="resp1" class="form-control" placeholder="Ej. Lima">
+                </div>
+                <div class="check-group">
+                  <input type="checkbox" formControlName="resp1Correcta" id="resp1Correcta">
+                  <label for="resp1Correcta">✅ Correcta</label>
+                </div>
+                <div class="form-group feedback-group">
+                  <label>Feedback</label>
+                  <input type="text" formControlName="resp1Feedback" class="form-control" placeholder="Opcional">
+                </div>
               </div>
-              <div class="form-group feedback-group">
-                <label>Feedback</label>
-                <input type="text" formControlName="resp1Feedback" class="form-control" placeholder="Opcional — ej. ¡Casi! Era Lima">
+              <div class="answer-box">
+                <div class="form-group">
+                  <label>Opción B</label>
+                  <input type="text" formControlName="resp2" class="form-control" placeholder="Ej. Buenos Aires">
+                </div>
+                <div class="check-group">
+                  <input type="checkbox" formControlName="resp2Correcta" id="resp2Correcta">
+                  <label for="resp2Correcta">✅ Correcta</label>
+                </div>
+                <div class="form-group feedback-group">
+                  <label>Feedback</label>
+                  <input type="text" formControlName="resp2Feedback" class="form-control" placeholder="Opcional">
+                </div>
               </div>
             </div>
+            <button class="btn btn-black" [disabled]="flashcardForm.invalid">{{ editId ? 'Actualizar Flashcard' : 'Guardar Flashcard' }}</button>
+          </form>
+        </div>
 
-            <div class="answer-box">
-              <div class="form-group">
-                <label>Opción B</label>
-                <input type="text" formControlName="resp2" class="form-control" placeholder="Ej. Buenos Aires">
-              </div>
-              <div class="check-group">
-                <input type="checkbox" formControlName="resp2Correcta" id="resp2Correcta">
-                <label for="resp2Correcta">✅ Correcta</label>
-              </div>
-              <div class="form-group feedback-group">
-                <label>Feedback</label>
-                <input type="text" formControlName="resp2Feedback" class="form-control" placeholder="Opcional — ej. ¡Correcto!">
-              </div>
-            </div>
-          </div>
-
-          <button class="btn btn-black" [disabled]="flashcardForm.invalid">Guardar Flashcard</button>
-        </form>
       </div>
-
     </div>
 
     <!-- Columna Derecha: Tablas -->
