@@ -59,3 +59,49 @@ h1 {
   text-align: center;
   font-weight: 700;
 }
+
+/* Flashcards list inside child profile */
+.flashcards-list {
+  margin-top: 16px;
+  border-top: 1px solid #e0e0e0;
+  padding-top: 12px;
+}
+.leccion-flashcards {
+  margin-bottom: 12px;
+}
+.leccion-titulo {
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: #2c3e50;
+  margin: 0 0 6px 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.flashcard-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  margin-bottom: 3px;
+  background: #f8f9fa;
+}
+.flashcard-item:hover {
+  background: #eef1f5;
+}
+.fc-status-icon {
+  font-size: 0.9rem;
+  flex-shrink: 0;
+}
+.fc-pregunta {
+  color: #34495e;
+  font-weight: 600;
+}
+.sin-lecciones-msg {
+  font-size: 0.85rem;
+  color: #888;
+  text-align: center;
+  padding: 16px 0;
+  font-weight: 600;
+}

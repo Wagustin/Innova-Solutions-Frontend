@@ -9,7 +9,11 @@ import { ApiDataService } from '../../services/api-data.service';
   imports: [CommonModule],
   template: `
     <div class="responder-container" *ngIf="flashcard">
-      <button class="btn btn-black" style="margin-bottom:20px" (click)="router.navigate(['/mis-flashcards'])">← Volver</button>
+      <div style="display:flex; gap:10px; margin-bottom:20px; align-items:center;">
+        <button class="btn btn-black" (click)="router.navigate(['/mis-flashcards'])">← Volver</button>
+        <button class="btn btn-black" style="background:#e67e22" (click)="editar()" *ngIf="rol === 'PROFESOR'">✏️ Editar</button>
+        <button class="btn btn-black" style="background:#c0392b" (click)="eliminar()" *ngIf="rol === 'PROFESOR'">🗑️ Borrar</button>
+      </div>
 
       <div class="flashcard-card" [style.backgroundColor]="flashcard.colorFondo || '#fdf7c3'">
         <p class="pregunta" [style.color]="flashcard.colorTexto || '#2c3e50'">{{ flashcard.preguntaTexto }}</p>
@@ -61,6 +65,8 @@ export class ResponderFlashcard implements OnInit {
   feedback = '';
   error = '';
   respuestaVisible = false;
+  progresoGuardado = false;
+  rol = '';
 
   constructor(
     private route: ActivatedRoute,
@@ -70,12 +76,31 @@ export class ResponderFlashcard implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.rol = (localStorage.getItem('rol') || '').toUpperCase().replace(/^ROLE_/, '');
     const id = this.route.snapshot.params['id'];
     if (!id) { this.error = 'Flashcard no encontrada.'; return; }
     this.api.getFlashcard(id).subscribe({
       next: (f) => { this.flashcard = f; this.cdr.detectChanges(); },
       error: () => { this.error = 'No se pudo cargar la flashcard.'; this.cdr.detectChanges(); }
     });
+  }
+
+  private guardarProgreso(): void {
+    if (this.progresoGuardado) return;
+    const userId = localStorage.getItem('userId');
+    const rol = (localStorage.getItem('rol') || '').toUpperCase();
+    if (!userId || rol !== 'ALUMNO') return;
+    const leccionId = this.flashcard.leccion?.id;
+    if (!leccionId) return;
+    this.progresoGuardado = true;
+    this.api.crearProgresoEvaluacion({
+      puntaje: 10,
+      medallasObtenidas: 1,
+      fechaEvaluacion: new Date().toISOString(),
+      reporteGenerado: 'Completado desde el visor de flashcards',
+      estudianteId: Number(userId),
+      leccionId: leccionId
+    }).subscribe({ error: () => { this.progresoGuardado = false; } });
   }
 
   responder(op: any) {
@@ -85,11 +110,25 @@ export class ResponderFlashcard implements OnInit {
     this.feedback = op.esCorrecta
       ? '✅ ¡Correcto!'
       : `❌ Incorrecto. La respuesta correcta era: ${correcta?.textoOpcion || '?'}`;
+    if (op.esCorrecta) this.guardarProgreso();
     this.cdr.detectChanges();
   }
 
   mostrarRespuesta() {
     this.respuestaVisible = true;
+    this.guardarProgreso();
     this.cdr.detectChanges();
+  }
+
+  editar() {
+    this.router.navigate(['/creacion'], { queryParams: { edit: this.flashcard.id } });
+  }
+
+  eliminar() {
+    if (!confirm('¿Eliminar esta flashcard?')) return;
+    this.api.eliminarFlashcard(this.flashcard.id).subscribe({
+      next: () => this.router.navigate(['/mis-flashcards']),
+      error: () => alert('Error al eliminar la flashcard')
+    });
   }
 }

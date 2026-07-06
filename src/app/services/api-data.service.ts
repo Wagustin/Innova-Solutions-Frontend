@@ -47,6 +47,12 @@ export class ApiDataService {
   crearFlashcardConOpciones(payload: any): Observable<any> {
     return this.http.post(`${this.baseUrl}/flashcards/con-opciones`, payload);
   }
+  actualizarFlashcard(id: number, payload: any): Observable<any> {
+    return this.http.put(`${this.baseUrl}/flashcards/${id}`, payload);
+  }
+  eliminarFlashcard(id: number): Observable<any> {
+    return this.http.delete(`${this.baseUrl}/flashcards/${id}`);
+  }
   // Upload
   subirImagen(file: File): Observable<any> {
     const fd = new FormData();
@@ -69,5 +75,17 @@ export class ApiDataService {
   // Alumnos (registro desde Padre)
   registrarAlumno(payload: any): Observable<any> {
     return this.http.post(`${this.baseUrl}/usuarios/registro-alumno`, payload);
+  }
+  // Progresos de Evaluación
+  getProgresosEvaluacion(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}/progresos-evaluacion`);
+  }
+  crearProgresoEvaluacion(payload: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/progresos-evaluacion`, payload);
+  }
+
+  // Relaciones Tutor-Estudiante
+  getRelacionesTutorEstudiante(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}/relaciones-tutor-estudiante`);
   }
 }
