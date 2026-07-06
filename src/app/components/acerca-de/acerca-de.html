@@ -1,60 +1,79 @@
-<div class="acerca-container">
-  
-  <div class="acerca-layout">
-    
-    <!-- LEFT: TEAM -->
-    <div class="team-section">
-      <h2 class="section-title">ACERCA DE NUESTRO EQUIPO</h2>
-      
-      <div class="team-grid">
-        <div class="team-member item-1">
-          <div class="member-photo">👨‍💻</div>
-          <h4>Ayquipa</h4>
+<div class="acerca-container" *ngIf="!esAlumno">
+  <div class="dashboard-wrapper">
+
+    <div class="hero-section">
+      <h1>Sobre Nosotros</h1>
+      <p>
+        Somos un equipo apasionado por la educación y la tecnología. Creemos en el poder de transformar el aprendizaje tradicional a través de herramientas interactivas, haciendo de la educación una experiencia accesible, atractiva y medible para todos los estudiantes y docentes.
+      </p>
+    </div>
+
+    <div class="mision-vision-grid">
+      <div class="mv-card">
+        <div class="mv-icon">
+          <i class="fa-solid fa-bullseye"></i>
         </div>
-        
-        <div class="team-member item-2">
-          <div class="member-photo">👨‍💻</div>
-          <h4>Huancaya</h4>
+        <h2>Misión</h2>
+        <p>
+          Proporcionar una plataforma educativa innovadora y divertida que permita a los estudiantes aprender a su propio ritmo mediante herramientas interactivas, facilitando la creación de contenido por parte de docentes y padres. En Innova Solutions trabajamos todos los días para brindar excelencia educativa de forma digital y accesible.
+        </p>
+      </div>
+
+      <div class="mv-card">
+        <div class="mv-icon">
+          <i class="fa-solid fa-eye"></i>
         </div>
-        
-        <div class="team-member item-3">
-          <div class="member-photo">👨‍💻</div>
-          <h4>Palomares</h4>
-        </div>
-        
-        <div class="team-member item-4">
-          <div class="member-photo">👨‍💻</div>
-          <h4>Villugas</h4>
-        </div>
-        
-        <div class="team-member item-5">
-          <div class="member-photo">👨‍💻</div>
-          <h4>Cruzada</h4>
-        </div>
+        <h2>Visión</h2>
+        <p>
+          Ser la plataforma líder en el sector EdTech a nivel regional, transformando la educación tradicional en una experiencia atractiva, medible y accesible para todos. Buscamos empoderar tanto a las familias como a las instituciones para acompañar el crecimiento cognitivo de la nueva generación.
+        </p>
       </div>
     </div>
 
-    <!-- RIGHT: MISION / VISION -->
-    <div class="mv-section">
-      
-      <div class="mv-card bg-pastel-blue">
-        <div class="mv-icon">🎯</div>
-        <h3>MISIÓN</h3>
-        <p>
-          Proporcionar una plataforma educativa innovadora y divertida que permita a los estudiantes aprender a su propio ritmo mediante herramientas interactivas, facilitando la creación de contenido por parte de docentes y padres.
-        </p>
+    <div class="team-section">
+      <div class="team-header">
+        <h2><i class="fa-solid fa-users"></i> Nuestro Equipo</h2>
+        <p>Conoce a las mentes creativas detrás de Innova Solutions</p>
       </div>
 
-      <div class="mv-card bg-pastel-yellow">
-        <div class="mv-icon">🚀</div>
-        <h3>VISIÓN</h3>
-        <p>
-          Ser la plataforma líder en el sector EdTech a nivel regional, transformando la educación tradicional en una experiencia atractiva, medible y accesible para todos, donde el aprendizaje perfecto sea una realidad.
-        </p>
+      <div class="team-grid">
+        <div class="team-card">
+          <div class="img-wrapper">
+            <img src="assets/team/Agustin.jpeg" alt="Agustín">
+          </div>
+          <h3>Agustín</h3>
+          <p>Desarrollador</p>
+        </div>
+        <div class="team-card">
+          <div class="img-wrapper">
+            <img src="assets/team/Gerard.jpg" alt="Gerard">
+          </div>
+          <h3>Gerard</h3>
+          <p>Desarrollador</p>
+        </div>
+        <div class="team-card">
+          <div class="img-wrapper">
+            <img src="assets/team/Josue.jpg" alt="Josue">
+          </div>
+          <h3>Josue</h3>
+          <p>Desarrollador</p>
+        </div>
+        <div class="team-card">
+          <div class="img-wrapper">
+            <img src="assets/team/Nicole.jpg" alt="Nicole">
+          </div>
+          <h3>Nicole</h3>
+          <p>Desarrolladora</p>
+        </div>
+        <div class="team-card">
+          <div class="img-wrapper">
+            <img src="assets/team/Vasco.jpg" alt="Vasco">
+          </div>
+          <h3>Vasco</h3>
+          <p>Desarrollador</p>
+        </div>
       </div>
-
     </div>
 
   </div>
-
 </div>

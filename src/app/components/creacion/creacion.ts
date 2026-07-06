@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, NgZone } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -34,7 +34,8 @@ export class Creacion implements OnInit {
     private fb: FormBuilder,
     private api: ApiDataService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private zone: NgZone
   ) {}
 
   ngOnInit() {
@@ -51,7 +52,7 @@ export class Creacion implements OnInit {
     this.leccionForm = this.fb.group({
       temaId: ['', Validators.required],
       titulo: ['', [Validators.required, Validators.minLength(3)]],
-      estudianteId: ['', Validators.required]
+      estudianteId: ['']
     });
 
     this.flashcardForm = this.fb.group({
@@ -72,44 +73,54 @@ export class Creacion implements OnInit {
       this.editId = Number(editParam);
       this.api.getFlashcard(this.editId).subscribe({
         next: (f) => {
-          this.flashcardForm.patchValue({
-            leccionId: f.leccion?.id ?? f.leccionId,
-            preguntaTexto: f.preguntaTexto,
+          this.zone.run(() => {
+            this.flashcardForm.patchValue({
+              leccionId: f.leccion?.id ?? f.leccionId,
+              preguntaTexto: f.preguntaTexto,
+            });
+            if (f.opciones?.length > 0) {
+              this.flashcardForm.patchValue({
+                resp1: f.opciones[0].textoOpcion,
+                resp1Correcta: f.opciones[0].esCorrecta,
+                resp1Feedback: f.opciones[0].feedbackRespuesta,
+              });
+            }
+            if (f.opciones?.length > 1) {
+              this.flashcardForm.patchValue({
+                resp2: f.opciones[1].textoOpcion,
+                resp2Correcta: f.opciones[1].esCorrecta,
+                resp2Feedback: f.opciones[1].feedbackRespuesta,
+              });
+            }
+            this.imagenUrl = f.imagenUrl || '';
+            this.modalAbierto = 'flashcard';
           });
-          if (f.opciones?.length > 0) {
-            this.flashcardForm.patchValue({
-              resp1: f.opciones[0].textoOpcion,
-              resp1Correcta: f.opciones[0].esCorrecta,
-              resp1Feedback: f.opciones[0].feedbackRespuesta,
-            });
-          }
-          if (f.opciones?.length > 1) {
-            this.flashcardForm.patchValue({
-              resp2: f.opciones[1].textoOpcion,
-              resp2Correcta: f.opciones[1].esCorrecta,
-              resp2Feedback: f.opciones[1].feedbackRespuesta,
-            });
-          }
-          this.imagenUrl = f.imagenUrl || '';
         }
       });
     }
   }
 
   loadData() {
-    this.api.getCategorias().subscribe(res => this.categorias = res);
-    this.api.getTemas().subscribe(res => this.temas = res);
-    this.api.getLecciones().subscribe(res => this.lecciones = res);
-    this.api.getFlashcards().subscribe(res => this.flashcards = res);
-    this.api.getUsuarios().subscribe(res => {
-      this.alumnos = res.filter((u: any) => u.rol?.id === 3);
+    this.api.getCategorias().subscribe({ next: res => this.zone.run(() => this.categorias = res), error: err => console.error(err) });
+    this.api.getTemas().subscribe({ next: res => this.zone.run(() => this.temas = res), error: err => console.error(err) });
+    this.api.getLecciones().subscribe({ next: res => this.zone.run(() => this.lecciones = res), error: err => console.error(err) });
+    this.api.getFlashcards().subscribe({ next: res => this.zone.run(() => this.flashcards = res), error: err => console.error(err) });
+    this.api.getUsuarios().subscribe({
+      next: (res) => {
+        this.zone.run(() => {
+          this.alumnos = res.filter((u: any) => u.rol?.id === 3);
+        });
+      },
+      error: (err) => {
+        console.error('No se pudieron cargar los alumnos (posible falta de permisos):', err);
+      }
     });
   }
 
   saveCat() {
     if(this.catForm.valid) {
       this.api.crearCategoria(this.catForm.value).subscribe({
-        next: (res) => { this.loadData(); this.catForm.reset({iconoUrl: 'https://ejemplo.com/icono.png'}); },
+        next: (res) => { this.loadData(); this.catForm.reset({iconoUrl: 'https://ejemplo.com/icono.png'}); this.cerrarModal(); },
         error: (err) => console.error(err)
       });
     }
@@ -118,7 +129,7 @@ export class Creacion implements OnInit {
   saveTema() {
     if(this.temaForm.valid) {
       this.api.crearTema(this.temaForm.value).subscribe({
-        next: (res) => { this.loadData(); this.temaForm.reset(); },
+        next: (res) => { this.loadData(); this.temaForm.reset(); this.cerrarModal(); },
         error: (err) => console.error(err)
       });
     }
@@ -127,13 +138,16 @@ export class Creacion implements OnInit {
   saveLeccion() {
     if(this.leccionForm.valid) {
       const userId = localStorage.getItem('userId');
-      const payload = {
+      const payload: any = {
         ...this.leccionForm.value,
         dificultad: 'Fácil',
         creadorId: userId ? Number(userId) : 1
       };
+      if (!payload.estudianteId) {
+        payload.estudianteId = null;
+      }
       this.api.crearLeccion(payload).subscribe({
-        next: (res) => { this.loadData(); this.leccionForm.reset(); },
+        next: (res) => { this.loadData(); this.leccionForm.reset(); this.cerrarModal(); },
         error: (err) => console.error(err)
       });
     }
@@ -177,19 +191,13 @@ export class Creacion implements OnInit {
       };
 
       if (this.editId) {
-        this.api.actualizarFlashcard(this.editId, {
-          preguntaTexto: form.preguntaTexto,
-          imagenUrl: this.imagenUrl,
-          colorFondo: '#fdf7c3',
-          colorTexto: '#2c3e50',
-          leccionId: form.leccionId
-        }).subscribe({
-          next: () => { this.loadData(); this.flashcardForm.reset(); this.imagenUrl = ''; this.editId = null; },
+        this.api.actualizarFlashcard(this.editId, payload).subscribe({
+          next: () => { this.loadData(); this.flashcardForm.reset(); this.imagenUrl = ''; this.editId = null; this.cerrarModal(); },
           error: (err) => console.error(err)
         });
       } else {
         this.api.crearFlashcardConOpciones(payload).subscribe({
-          next: () => { this.loadData(); this.flashcardForm.reset(); this.imagenUrl = ''; this.imagenPreview = ''; this.archivoSeleccionado = null; },
+          next: () => { this.loadData(); this.flashcardForm.reset(); this.imagenUrl = ''; this.imagenPreview = ''; this.archivoSeleccionado = null; this.cerrarModal(); },
           error: (err) => console.error(err)
         });
       }
@@ -201,11 +209,24 @@ export class Creacion implements OnInit {
     if (tipo === 'cat') this.catForm.reset({iconoUrl: 'https://ejemplo.com/icono.png'});
     else if (tipo === 'tema') this.temaForm.reset();
     else if (tipo === 'leccion') this.leccionForm.reset();
-    else if (tipo === 'flashcard') { this.flashcardForm.reset(); this.imagenUrl = ''; this.imagenPreview = ''; }
+    else if (tipo === 'flashcard') {
+      if (!this.editId) {
+        this.flashcardForm.reset(); 
+        this.imagenUrl = ''; 
+        this.imagenPreview = ''; 
+      }
+    }
   }
 
   cerrarModal(): void {
     this.modalAbierto = null;
+    if (this.editId) {
+      this.editId = null;
+      this.flashcardForm.reset();
+      this.imagenUrl = '';
+      this.imagenPreview = '';
+      this.router.navigate([], { queryParams: { edit: null }, queryParamsHandling: 'merge' });
+    }
   }
 
   getCatName(id: number) {

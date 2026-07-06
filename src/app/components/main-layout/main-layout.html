@@ -1,6 +1,6 @@
 <nav class="navbar">
   <div class="nav-brand" [routerLink]="getInicioLink">
-    <span class="icon">📘</span> Innova-Solutions
+    <span class="icon"><i class="fa-solid fa-book-open"></i></span> Innova-Solutions
   </div>
   
   <ul class="nav-links">
@@ -12,8 +12,11 @@
     <ng-template #defaultLinks>
       <li><a routerLink="/inicio" routerLinkActive="active">Inicio</a></li>
       <li><a routerLink="/mis-flashcards" routerLinkActive="active">Mis Flashcards</a></li>
-      <li *ngIf="puedeCrear"><a routerLink="/creacion" routerLinkActive="active">Creación</a></li>
-      <li><a routerLink="/acerca-de" routerLinkActive="active">Acerca de</a></li>
+      <ng-container *ngIf="esProfesor">
+        <li><a routerLink="/creacion" routerLinkActive="active">Creación</a></li>
+        <li><a routerLink="/mis-alumnos" routerLinkActive="active">Mis Alumnos</a></li>
+        <li><a routerLink="/acerca-de" routerLinkActive="active">Acerca de</a></li>
+      </ng-container>
     </ng-template>
   </ul>
 

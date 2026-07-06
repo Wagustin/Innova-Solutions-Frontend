@@ -1,10 +1,13 @@
 <div class="screen-container">
   <div class="logo-container">
-    <div class="logo-icon">📘</div>
+    <div class="logo-icon"><i class="fa-solid fa-book-open"></i></div>
     <h2 class="screen-title">INICIAR SESIÓN</h2>
   </div>
 
-  <div *ngIf="sessionExpired" class="alert-banner alert-warning">
+  <div *ngIf="idleTimeout" class="alert-banner alert-warning">
+    💤 Sesión cerrada por inactividad. ¡Vuelve a entrar!
+  </div>
+  <div *ngIf="sessionExpired && !idleTimeout" class="alert-banner alert-warning">
     ⏰ Sesión expirada. Iniciá sesión de nuevo.
   </div>
   <div *ngIf="hasAuthError" class="alert-banner alert-error">

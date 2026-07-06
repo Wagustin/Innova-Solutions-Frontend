@@ -41,7 +41,11 @@ export class MainLayout {
   get puedeCrear(): boolean {
     const rol = (localStorage.getItem('rol') || '').toUpperCase().replace(/^ROLE_/, '');
     const rolId = localStorage.getItem('rolId');
-    return rol === 'PROFESOR' || rolId === '1';
+    return rol === 'PROFESOR' || rol === 'MAESTRO' || rolId === '1';
+  }
+
+  get esProfesor(): boolean {
+    return this.puedeCrear;
   }
 
   get esPadre(): boolean {

@@ -17,10 +17,11 @@ export const loginInterceptor: HttpInterceptorFn = (req, next) => {
 
   return next(authReq).pipe(
     catchError(error => {
-      if (error.status === HttpStatusCode.Forbidden && !req.url.includes('/authenticate')) {
+      if (error.status === HttpStatusCode.Unauthorized && !req.url.includes('/authenticate')) {
         localStorage.clear();
         router.navigate(['/login'], { queryParams: { expired: '1' } });
       }
+      // If it's a 403 (Forbidden), we just pass the error along instead of forcing a logout.
       return throwError(() => error);
     })
   );
