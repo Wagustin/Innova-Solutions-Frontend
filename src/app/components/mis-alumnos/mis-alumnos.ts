@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ApiDataService } from '../../services/api-data.service';
 
@@ -20,7 +20,7 @@ export class MisAlumnosComponent implements OnInit {
   titulo: string = 'Mis Alumnos';
   descripcion: string = 'Aquí puedes ver y supervisar el avance de cada uno de tus estudiantes.';
 
-  constructor(private api: ApiDataService) {}
+  constructor(private api: ApiDataService, private cdr: ChangeDetectorRef) {}
 
   ngOnInit() {
     this.userId = Number(localStorage.getItem('userId'));
@@ -60,6 +60,7 @@ export class MisAlumnosComponent implements OnInit {
         }
         
         this.cargarMasDatos();
+        this.cdr.detectChanges();
       },
       error: (err) => console.error('Error cargando alumnos', err)
     });
@@ -67,7 +68,7 @@ export class MisAlumnosComponent implements OnInit {
 
   cargarMasDatos(): void {
     this.api.getProgresosEvaluacion().subscribe({
-      next: (data) => this.progresos = data,
+      next: (data) => { this.progresos = data; this.cdr.detectChanges(); },
       error: (err) => console.error('Error progresos:', err)
     });
 
