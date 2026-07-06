@@ -151,6 +151,10 @@ export class MisFlashcards implements OnInit {
     });
   }
 
+  irAResponder(id: number): void {
+    this.router.navigate(['/responder', id]);
+  }
+
   selectOption(card: Flashcard, option: Option) {
     if (card.isAnswered) return;
     card.selectedOption = option;

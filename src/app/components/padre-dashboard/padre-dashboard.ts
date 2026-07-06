@@ -24,16 +24,16 @@ export class PadreDashboard implements OnInit {
 
   ngOnInit(): void {
     this.apiService.getReporteDificultad().subscribe({
-      next: (data) => {
-        const maxTotal = data.length > 0 ? Math.max(...data.map(d => d.total)) : 0;
-        this.reporteDificultad = data.map(d => ({
+      next: (data: any[]) => {
+        const maxTotal = data.length > 0 ? Math.max(...data.map((d: any) => d.total)) : 0;
+        this.reporteDificultad = data.map((d: any) => ({
           dificultad: d.dificultad,
           total: d.total,
           cssClass: d.dificultad ? d.dificultad.toLowerCase() : '',
           widthPercent: maxTotal > 0 ? (d.total / maxTotal) * 100 : 0
         }));
       },
-      error: (err) => {
+      error: (err: any) => {
         console.error('Error fetching difficulty report', err);
       }
     });

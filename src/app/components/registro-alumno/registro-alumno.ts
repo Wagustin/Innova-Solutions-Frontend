@@ -56,8 +56,6 @@ export class RegistroAlumno implements OnInit {
     this.serverErrorMessage = '';
   }
 
-  vista: 'menu' | 'registro' | 'lista' = 'menu';
-
   // Navigation methods
   irARegistro(): void {
     this.inicializarFormulario();
@@ -66,7 +64,9 @@ export class RegistroAlumno implements OnInit {
 
   irALista(): void {
     this.vista = 'lista';
-    this.cargarDatos();
+    if (this.hijos.length === 0) {
+      this.cargarDatos();
+    }
   }
 
   volverMenu(): void {
@@ -292,7 +292,7 @@ export class RegistroAlumno implements OnInit {
         this.hijos.push(res);
         this.registrationSuccess = true;
         this.alumnoForm.disable();
-        setTimeout(() => { this.cargarDatos(); this.volverMenu(); }, 1500);
+        setTimeout(() => { this.volverMenu(); }, 1500);
       },
       error: (err) => {
         console.error('Error al registrar alumno:', err);
