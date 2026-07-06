@@ -155,23 +155,19 @@
             <p>Días de estudio</p>
           </div>
         </div>
-      </section>
-
-      <!-- CONTENIDO PRINCIPAL ALUMNO -->
-      <div class="dashboard-main-grid animate-slide-up-delayed" style="grid-template-columns: 1fr;">
-        <div class="glass-panel panel-flashcards">
-          <div class="panel-header">
-            <h2><i class="fa-solid fa-book-open"></i> Continúa aprendiendo</h2>
-          </div>
-          <div class="panel-body">
-            <div class="empty-state-modern">
-              <div class="empty-icon"><i class="fa-solid fa-rocket"></i></div>
-              <p>¡Todo listo para empezar a estudiar! Ve a la sección de flashcards para comenzar.</p>
-              <button routerLink="/mis-flashcards" class="btn btn-primary mt-3">Ver Mis Flashcards</button>
+        <div class="stat-card" style="display: flex; flex-direction: row; justify-content: space-between; align-items: center; background: linear-gradient(135deg, #8e2de2, #4a00e0); color: white; border: none; grid-column: 1 / -1; padding: 1rem 1.5rem; min-height: auto; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+          <div class="stat-info" style="display: flex; align-items: center; gap: 12px;">
+            <div class="stat-icon" style="background: rgba(255,255,255,0.2); color: white; width: 40px; height: 40px; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; border-radius: 8px;"><i class="fa-solid fa-rocket"></i></div>
+            <div style="text-align: left;">
+              <h3 style="color: white; margin-bottom: 2px; font-size: 1.2rem;">Continúa aprendiendo</h3>
+              <p style="color: rgba(255,255,255,0.9); font-size: 0.9rem; margin: 0;">¡Todo listo para empezar a estudiar!</p>
             </div>
           </div>
+          <button routerLink="/mis-flashcards" style="background-color: #ffffff; color: #6a1b9a; border: none; padding: 0.6rem 1.2rem; border-radius: 8px; font-weight: bold; cursor: pointer; display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.95rem; box-shadow: 0 2px 8px rgba(0,0,0,0.2);">
+            <i class="fa-solid fa-play"></i> Empezar
+          </button>
         </div>
-      </div>
+      </section>
       
     </div>
   </ng-container>

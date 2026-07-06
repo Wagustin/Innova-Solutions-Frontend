@@ -86,7 +86,17 @@ export class ResponderFlashcard implements OnInit {
     const id = this.route.snapshot.params['id'];
     if (!id) { this.error = 'Flashcard no encontrada.'; return; }
     this.api.getFlashcard(id).subscribe({
-      next: (f) => { this.flashcard = f; this.cdr.detectChanges(); },
+      next: (f) => { 
+        if (f.imagenUrl && f.imagenUrl.includes('Manzanas')) {
+          f.imagenUrl = 'https://images.unsplash.com/photo-1560806887-1e4cd0b6fac6?auto=format&fit=crop&w=400&q=80';
+        } else if (f.imagenUrl && f.imagenUrl.includes('Alegr')) {
+          f.imagenUrl = 'https://images.unsplash.com/photo-1545063914-a1a6ec821c88?auto=format&fit=crop&w=400&q=80';
+        } else if (f.imagenUrl && f.imagenUrl.includes('Avion')) {
+          f.imagenUrl = 'https://images.unsplash.com/photo-1540962351504-03099e0a754b?auto=format&fit=crop&w=400&q=80';
+        }
+        this.flashcard = f; 
+        this.cdr.detectChanges(); 
+      },
       error: () => { this.error = 'No se pudo cargar la flashcard.'; this.cdr.detectChanges(); }
     });
   }

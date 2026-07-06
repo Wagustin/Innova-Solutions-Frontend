@@ -1,222 +1,177 @@
 <div class="alumno-container">
-  <!-- 1. VISTA MENÚ PRINCIPAL DE MIS HIJOS -->
-  <div class="alumno-card menu-view" *ngIf="vista === 'menu'">
-    <div class="alumno-header">
-      <div class="alumno-icon-wrapper">
-        <div class="css-family-icon large">
-          <div class="roof"></div>
-          <div class="base"><div class="door"></div></div>
-        </div>
+  <div class="dashboard-wrapper">
+
+    <!-- MENU VIEW -->
+    <div class="menu-panel" *ngIf="vista === 'menu'">
+      <div class="menu-icon purple">
+        <i class="fa-solid fa-children"></i>
       </div>
       <h1>Mis Hijos</h1>
       <p class="subtitle">Gestiona el registro y visualiza el avance académico de tus hijos.</p>
+      <div class="menu-actions">
+        <button class="menu-btn green" (click)="irARegistro()">
+          <i class="fa-solid fa-user-plus"></i>
+          <span>Registrar nuevo hijo</span>
+        </button>
+        <button class="menu-btn purple" (click)="irALista()">
+          <i class="fa-solid fa-users-viewfinder"></i>
+          <span>Hijos ya registrados</span>
+        </button>
+      </div>
     </div>
 
-    <div class="menu-actions">
-      <button class="btn btn-black btn-menu" (click)="irARegistro()">
-        <span class="btn-content">
-          <span class="css-icon icon-plus"></span>
-          Registrar nuevo hijo
-        </span>
-      </button>
-
-      <button class="btn btn-outline btn-menu" (click)="irALista()">
-        <span class="btn-content">
-          <span class="css-group-icon small">
-            <span class="member back">
-              <span class="head"></span>
-              <span class="body"></span>
-            </span>
-            <span class="member front">
-              <span class="head"></span>
-              <span class="body"></span>
-            </span>
-          </span>
-          Hijos ya registrados
-        </span>
-      </button>
-    </div>
-  </div>
-
-  <!-- 2. VISTA REGISTRAR HIJO -->
-  <div class="alumno-card" *ngIf="vista === 'registro'">
-    <div class="alumno-header">
-      <div class="alumno-icon-wrapper">
-        <div class="css-child-icon large">
-          <div class="head"></div>
-          <div class="body"></div>
-        </div>
+    <!-- REGISTRO VIEW -->
+    <div class="form-panel" *ngIf="vista === 'registro'">
+      <div class="menu-icon green">
+        <i class="fa-solid fa-user-plus"></i>
       </div>
       <h1>Registrar a mi hijo</h1>
       <p class="subtitle">Completa los datos para que tu hijo acceda a la plataforma.</p>
-    </div>
 
-    <div *ngIf="submitAttempted && alumnoForm.invalid" class="alert-banner alert-error">
-      <span class="alert-content">
-        <span class="css-icon icon-warning"></span>
-        Completa todos los campos correctamente
-      </span>
-    </div>
-    <div *ngIf="serverErrorMessage" class="alert-banner alert-error">
-      <span class="alert-content">
-        <span class="css-icon icon-warning"></span>
-        {{ serverErrorMessage }}
-      </span>
-    </div>
-    <div *ngIf="registrationSuccess" class="alert-banner alert-success">
-      <span class="alert-content">
-        <span class="css-icon icon-check"></span>
-        Alumno registrado correctamente
-      </span>
-    </div>
-
-    <form [formGroup]="alumnoForm" (ngSubmit)="onSubmit()" style="width: 100%;">
-      <div class="form-group">
-        <label>Nombre de Usuario del Niño</label>
-        <input type="text" formControlName="nickname" class="form-control"
-               [class.error]="submitAttempted && alumnoForm.get('nickname')?.invalid"
-               placeholder="Ej. carlitos123">
-        <small class="field-hint">(Con este nombre de usuario tu hijo iniciará sesión)</small>
+      <div *ngIf="submitAttempted && alumnoForm.invalid" class="alert-banner alert-error">
+        <i class="fa-solid fa-triangle-exclamation"></i>
+        <span>Completa todos los campos correctamente</span>
+      </div>
+      <div *ngIf="serverErrorMessage" class="alert-banner alert-error">
+        <i class="fa-solid fa-triangle-exclamation"></i>
+        <span>{{ serverErrorMessage }}</span>
+      </div>
+      <div *ngIf="registrationSuccess" class="alert-banner alert-success">
+        <i class="fa-solid fa-circle-check"></i>
+        <span>Alumno registrado correctamente</span>
       </div>
 
-      <div class="form-group">
-        <label>PIN de acceso (4 dígitos)</label>
-        <input type="text" formControlName="pin" class="form-control" maxlength="4"
-               [class.error]="submitAttempted && alumnoForm.get('pin')?.invalid"
-               placeholder="****" inputmode="numeric" pattern="[0-9]*">
-      </div>
-
-      <button *ngIf="!registrationSuccess" type="submit" class="btn btn-black">
-        Registrar
-      </button>
-    </form>
-
-    <p class="link-text" *ngIf="!registrationSuccess" (click)="volverMenu()">
-      ← Volver al menú
-    </p>
-  </div>
-
-  <!-- 3. VISTA HIJOS REGISTRADOS -->
-  <div class="alumno-card expanded" *ngIf="vista === 'lista'">
-    <div class="alumno-header">
-      <div class="alumno-icon-wrapper">
-        <div class="css-group-icon large">
-          <span class="member back">
-            <span class="head"></span>
-            <span class="body"></span>
-          </span>
-          <span class="member front">
-            <span class="head"></span>
-            <span class="body"></span>
-          </span>
+      <form [formGroup]="alumnoForm" (ngSubmit)="onSubmit()">
+        <div class="form-group">
+          <label>Nombre de Usuario del Niño</label>
+          <input type="text" formControlName="nickname" class="form-control"
+                 [class.error]="submitAttempted && alumnoForm.get('nickname')?.invalid"
+                 placeholder="Ej. carlitos123">
+          <small class="field-hint">Con este nombre de usuario tu hijo iniciará sesión</small>
         </div>
+
+        <div class="form-group">
+          <label>PIN de acceso (4 dígitos)</label>
+          <input type="text" formControlName="pin" class="form-control" maxlength="4"
+                 [class.error]="submitAttempted && alumnoForm.get('pin')?.invalid"
+                 placeholder="****" inputmode="numeric" pattern="[0-9]*">
+        </div>
+
+        <button *ngIf="!registrationSuccess" type="submit" class="submit-btn">
+          <i class="fa-solid fa-check"></i>
+          <span>Registrar</span>
+        </button>
+      </form>
+
+      <div class="back-link" *ngIf="!registrationSuccess" (click)="volverMenu()">
+        <i class="fa-solid fa-arrow-left"></i> Volver al menú
+      </div>
+    </div>
+
+    <!-- LISTA VIEW -->
+    <div class="lista-panel" *ngIf="vista === 'lista'">
+      <div class="menu-icon blue">
+        <i class="fa-solid fa-users-viewfinder"></i>
       </div>
       <h1>Hijos Registrados</h1>
       <p class="subtitle">Visualiza sus perfiles, avanza con flashcards y edita su información.</p>
-    </div>
 
-    <div class="loading-container" *ngIf="!loaded">
-      <div class="loading-spinner"></div>
-      <p class="loading-text">Cargando información...</p>
-    </div>
+      <div class="loading-container" *ngIf="!loaded">
+        <i class="fa-solid fa-spinner fa-spin" style="font-size: 1.5rem;"></i>
+        <p style="margin-top: 0.75rem;">Cargando información...</p>
+      </div>
 
-    <div *ngIf="loaded" style="width: 100%;">
-      <div class="hijos-profiles" *ngIf="hijos.length > 0">
-        <div class="hijo-profile-card" 
-             *ngFor="let hijo of hijos" 
-             [class.selected]="hijoSeleccionadoId === hijo.id"
-             (click)="seleccionarHijo(hijo.id)">
-          
-          <div class="profile-header">
-            <span class="profile-avatar">
-              <span style="font-size: 1.8rem;">{{ getAvatar(hijo) }}</span>
-            </span>
-            <div class="profile-meta">
-              <span class="profile-name">{{ hijo.nombreCompleto || hijo.username }}</span>
-              <span class="profile-username">@{{ hijo.username }}</span>
-            </div>
-            <span class="expand-indicator">{{ hijoSeleccionadoId === hijo.id ? '▼' : '▶' }}</span>
-          </div>
+      <div *ngIf="loaded">
+        <div *ngIf="hijos.length > 0">
+          <div class="hijo-card"
+               *ngFor="let hijo of hijos"
+               [class.selected]="hijoSeleccionadoId === hijo.id"
+               (click)="seleccionarHijo(hijo.id)">
 
-          <div class="profile-details" *ngIf="hijoSeleccionadoId === hijo.id" (click)="$event.stopPropagation()">
-            
-            <div class="details-section progress-section">
-              <h4>Avance de Tareas</h4>
-
-              <div class="class-status">
-                <span class="status-badge" [class.success]="estaEnClase(hijo.id)" [class.error]="!estaEnClase(hijo.id)">
-                  <span class="badge-content">
-                    <span class="css-icon" [class.icon-check]="estaEnClase(hijo.id)" [class.icon-warning]="!estaEnClase(hijo.id)"></span>
-                    {{ estaEnClase(hijo.id) ? 'En clase' : 'Sin clase asignada' }}
-                  </span>
-                </span>
+            <div class="hijo-header">
+              <span class="hijo-avatar">{{ getAvatar(hijo) }}</span>
+              <div class="hijo-info">
+                <div class="hijo-name">{{ hijo.nombreCompleto || hijo.username }}</div>
+                <div class="hijo-username">@{{ hijo.username }}</div>
               </div>
+              <i class="fa-solid" [ngClass]="hijoSeleccionadoId === hijo.id ? 'fa-chevron-up' : 'fa-chevron-down'" class="hijo-chevron"></i>
+            </div>
 
-              <div class="flashcards-list" *ngIf="getLeccionesDeHijo(hijo.id).length > 0; else sinLecciones">
-                <div class="leccion-flashcards" *ngFor="let lec of getLeccionesDeHijo(hijo.id)">
-                  <h5 class="leccion-titulo">{{ lec.titulo }}</h5>
-                  <div class="flashcard-item" *ngFor="let fc of getFlashcardsDeLeccion(lec.id)">
-                    <span class="fc-status-icon" *ngIf="leccionCompletada(lec.id, hijo.id)"><i class="fa-solid fa-check"></i></span>
-                    <span class="fc-status-icon" *ngIf="!leccionCompletada(lec.id, hijo.id)"><i class="fa-solid fa-hourglass-half"></i></span>
-                    <span class="fc-pregunta">{{ fc.preguntaTexto }}</span>
+            <div class="hijo-details" *ngIf="hijoSeleccionadoId === hijo.id" (click)="$event.stopPropagation()">
+              <!-- Avance -->
+              <div class="detail-section">
+                <h4><i class="fa-solid fa-chart-line" style="color:#2563eb;"></i> Avance de Tareas</h4>
+
+                <span class="status-tag" [class.active]="estaEnClase(hijo.id)" [class.inactive]="!estaEnClase(hijo.id)">
+                  <i class="fa-solid" [ngClass]="estaEnClase(hijo.id) ? 'fa-circle-check' : 'fa-triangle-exclamation'"></i>
+                  {{ estaEnClase(hijo.id) ? 'En clase' : 'Sin clase asignada' }}
+                </span>
+
+                <div style="margin-top: 0.75rem;">
+                  <div class="lesson-block" *ngFor="let lec of getLeccionesDeHijo(hijo.id)">
+                    <h5 class="lesson-title">{{ lec.titulo }}</h5>
+                    <div class="flashcard-row" *ngFor="let fc of getFlashcardsDeLeccion(lec.id)">
+                      <i class="fa-solid" [ngClass]="leccionCompletada(lec.id, hijo.id) ? 'fa-circle-check done' : 'fa-hourglass-half pending'"></i>
+                      <span>{{ fc.preguntaTexto }}</span>
+                    </div>
+                  </div>
+                  <div *ngIf="getLeccionesDeHijo(hijo.id).length === 0" class="no-lessons">
+                    No tiene lecciones asignadas aún.
                   </div>
                 </div>
               </div>
-              <ng-template #sinLecciones>
-                <p class="sin-lecciones-msg">No tiene lecciones asignadas aún.</p>
-              </ng-template>
-            </div>
 
-            <div class="details-section edit-section">
-              <h4>Datos del Perfil</h4>
+              <!-- Perfil -->
+              <div class="detail-section">
+                <h4><i class="fa-solid fa-id-card" style="color:#7c3aed;"></i> Datos del Perfil</h4>
 
-              <div class="edit-form" *ngIf="hijoEditandoId === hijo.id">
-                <div class="form-input-group">
-                  <label>Nombre Completo</label>
-                  <input type="text" [(ngModel)]="editNombreCompleto" class="edit-input" placeholder="Nombre completo">
+                <div *ngIf="hijoEditandoId === hijo.id" class="edit-form">
+                  <div class="edit-field">
+                    <label>Nombre Completo</label>
+                    <input type="text" [(ngModel)]="editNombreCompleto" placeholder="Nombre completo">
+                  </div>
+                  <div class="edit-field">
+                    <label>Nombre de Usuario</label>
+                    <input type="text" [(ngModel)]="editUsername" placeholder="Usuario">
+                  </div>
+                  <div class="edit-field">
+                    <label>Nuevo PIN (vacío para no cambiar)</label>
+                    <input type="password" [(ngModel)]="editPassword" placeholder="****" maxlength="4" inputmode="numeric" pattern="[0-9]*">
+                  </div>
+                  <div class="edit-actions">
+                    <button class="save" (click)="guardarEdicion(hijo)"><i class="fa-solid fa-save"></i> Guardar</button>
+                    <button class="cancel" (click)="cancelarEdicion()"><i class="fa-solid fa-xmark"></i> Cancelar</button>
+                  </div>
                 </div>
-                <div class="form-input-group">
-                  <label>Nombre de Usuario</label>
-                  <input type="text" [(ngModel)]="editUsername" class="edit-input" placeholder="Usuario">
-                </div>
-                <div class="form-input-group">
-                  <label>Nuevo PIN (4 dígitos - dejar vacío para no cambiar)</label>
-                  <input type="password" [(ngModel)]="editPassword" class="edit-input" placeholder="****" maxlength="4" inputmode="numeric" pattern="[0-9]*">
-                </div>
-                <div class="edit-form-actions">
-                  <button class="btn-action save" (click)="guardarEdicion(hijo)">Guardar</button>
-                  <button class="btn-action cancel" (click)="cancelarEdicion()">Cancelar</button>
-                </div>
-              </div>
 
-              <div class="read-info" *ngIf="hijoEditandoId !== hijo.id">
-                <div class="info-row">
-                  <span class="info-lbl">Nombre:</span>
-                  <span class="info-val">{{ hijo.nombreCompleto || hijo.username }}</span>
-                </div>
-                <div class="info-row">
-                  <span class="info-lbl">Usuario:</span>
-                  <span class="info-val">@{{ hijo.username }}</span>
-                  <button class="btn-modify-inline" (click)="iniciarEdicion(hijo)">
-                    <span class="btn-content-small">
-                      <span class="css-icon icon-pencil"></span>
-                      Modificar
-                    </span>
-                  </button>
+                <div *ngIf="hijoEditandoId !== hijo.id" class="profile-info">
+                  <div class="profile-row">
+                    <span class="profile-label">Nombre:</span>
+                    <span class="profile-value">{{ hijo.nombreCompleto || hijo.username }}</span>
+                  </div>
+                  <div class="profile-row">
+                    <span class="profile-label">Usuario:</span>
+                    <span class="profile-value">@{{ hijo.username }}</span>
+                    <button class="edit-btn" style="margin-left: auto;" (click)="iniciarEdicion(hijo)">
+                      <i class="fa-solid fa-pen"></i> Modificar
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <div class="no-hijos-banner" *ngIf="hijos.length === 0">
-        <p>No tienes hijos registrados todavía.</p>
+        <div class="empty-state" *ngIf="hijos.length === 0">
+          <i class="fa-solid fa-ghost"></i>
+          <p>No tienes hijos registrados todavía.</p>
+        </div>
+
+        <div class="back-link" (click)="volverMenu()" style="margin-top: 1.5rem;">
+          <i class="fa-solid fa-arrow-left"></i> Volver al menú
+        </div>
       </div>
     </div>
 
-    <p class="link-text" (click)="volverMenu()" style="margin-top: 25px;">
-      ← Volver al menú
-    </p>
   </div>
 </div>

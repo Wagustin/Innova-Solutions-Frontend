@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
 import { ApiDataService } from '../../services/api-data.service';
 
 interface DificultadData {
@@ -12,7 +13,7 @@ interface DificultadData {
 @Component({
   selector: 'app-padre-dashboard',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   templateUrl: './padre-dashboard.html',
   styleUrls: ['./padre-dashboard.css']
 })

@@ -79,6 +79,7 @@ export class RegistroAlumno implements OnInit {
   }
 
   // Data loading methods
+  todosUsuarios: any[] = [];
   cargarDatos(): void {
     const parentIdStr = localStorage.getItem('userId');
     const parentId = parentIdStr ? Number(parentIdStr) : null;
@@ -86,6 +87,7 @@ export class RegistroAlumno implements OnInit {
     if (parentId) {
       this.apiService.getUsuarios().subscribe({
         next: (users) => {
+          this.todosUsuarios = users;
           this.hijos = users.filter((u: any) => u.creadoPorId === parentId);
           this.cargarMasDatos();
         },
@@ -99,6 +101,7 @@ export class RegistroAlumno implements OnInit {
       if (username) {
         this.apiService.getUsuarios().subscribe({
           next: (users) => {
+            this.todosUsuarios = users;
             const me = users.find((u: any) => u.username === username);
             if (me) {
               localStorage.setItem('userId', me.id.toString());
@@ -181,11 +184,33 @@ export class RegistroAlumno implements OnInit {
   }
 
   getLeccionesDeHijo(hijoId: number): any[] {
-    return this.lecciones.filter((l: any) => l.estudiante && l.estudiante.id === hijoId);
+    const parentIdStr = localStorage.getItem('userId');
+    const parentId = parentIdStr ? Number(parentIdStr) : null;
+    const padre = this.todosUsuarios.find(u => u.id === parentId);
+    const profesorId = padre?.creadoPorId;
+    
+    // Todas las lecciones que ha hecho este profesor
+    let leccionesProfesor = this.lecciones.filter((l: any) => l.creador && l.creador.id === profesorId);
+    
+    // Si el profesor no ha hecho lecciones, usamos la por defecto (id 1)
+    if (leccionesProfesor.length === 0) {
+      return [{
+        id: 1, // o 99999 dependiendo de la BD. En data.sql las defaults son leccion_id 1, 2, 3
+        titulo: 'Lecciones por defecto'
+      }];
+    }
+    
+    // Si hay lecciones, devolvemos las que son para este alumno O para toda la clase (estudiante_id null)
+    return leccionesProfesor.filter((l: any) => !l.estudiante || l.estudiante.id === hijoId);
   }
 
   getFlashcardsDeLeccion(leccionId: number): any[] {
-    return this.flashcards.filter((f: any) => f.leccion && f.leccion.id === leccionId);
+    const fcs = this.flashcards.filter((f: any) => f.leccion && f.leccion.id === leccionId);
+    if (fcs.length === 0 && (leccionId === 1 || leccionId === 2 || leccionId === 3)) {
+      // Si no encontró y es la 1, tal vez la relación f.leccion no esté completa, buscamos por id
+      return this.flashcards.filter(f => f.id === 1 || f.id === 2 || f.id === 3);
+    }
+    return fcs;
   }
 
   leccionCompletada(leccionId: number, hijoId: number): boolean {
@@ -195,7 +220,7 @@ export class RegistroAlumno implements OnInit {
   }
 
   getFlashcardsProgreso(hijoId: number): string {
-    const leccionesAsignadas = this.lecciones.filter((l: any) => l.estudiante && l.estudiante.id === hijoId);
+    const leccionesAsignadas = this.getLeccionesDeHijo(hijoId);
     
     if (leccionesAsignadas.length === 0) {
       return 'No tiene pendientes';
@@ -205,12 +230,10 @@ export class RegistroAlumno implements OnInit {
     let completedFlashcards = 0;
 
     leccionesAsignadas.forEach((lec: any) => {
-      const numCards = lec.flashcards ? lec.flashcards.length : 0;
+      const numCards = this.getFlashcardsDeLeccion(lec.id).length;
       totalFlashcards += numCards;
 
-      const completada = this.progresos.some(
-        (p: any) => p.leccion && p.leccion.id === lec.id && p.estudiante && p.estudiante.id === hijoId
-      );
+      const completada = this.leccionCompletada(lec.id, hijoId);
 
       if (completada) {
         completedFlashcards += numCards;
