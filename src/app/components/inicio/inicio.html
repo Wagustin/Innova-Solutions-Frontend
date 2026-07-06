@@ -1,53 +1,126 @@
 <div class="inicio-container">
   
-  <ng-container *ngIf="rol === 'PROFESOR'">
-    <section class="dashboard-header">
-      <h1>Panel de Maestro</h1>
-      <p>Bienvenido a tu panel de control. Desde aquí puedes gestionar a tus alumnos y contenido.</p>
-    </section>
+  <!-- LOADER -->
+  <div class="loader-container" *ngIf="isLoading">
+    <div class="spinner"></div>
+    <p>Cargando panel de control...</p>
+  </div>
 
-    <div class="dashboard-grid">
-      <!-- Tarjeta de Acciones Rápidas -->
-      <div class="dashboard-card actions-card">
-        <h3>Acciones Rápidas</h3>
-        <div class="actions-list">
-          <a routerLink="/creacion" class="btn btn-primary action-btn"><i class="fa-solid fa-plus"></i> Crear Nueva Lección</a>
-          <a routerLink="/creacion" class="btn btn-secondary action-btn"><i class="fa-solid fa-plus"></i> Añadir Flashcard</a>
+  <ng-container *ngIf="rol === 'PROFESOR' && !isLoading">
+    <div class="dashboard-wrapper">
+      
+      <!-- ENCABEZADO -->
+      <section class="dashboard-header animate-fade-in">
+        <div class="header-content">
+          <h1>Panel de Maestro</h1>
+          <p>Gestiona tu contenido, supervisa a tus alumnos y crea nuevas experiencias de aprendizaje.</p>
         </div>
-      </div>
+        <div class="header-actions">
+          <button routerLink="/creacion" class="btn-create-pulse">
+            <i class="fa-solid fa-wand-magic-sparkles"></i>
+            <span>Crear Contenido</span>
+          </button>
+        </div>
+      </section>
 
-      <!-- Tarjeta de Alumnos -->
-      <div class="dashboard-card students-card">
-        <h3>Mis Alumnos</h3>
-        <ul class="students-list" *ngIf="usuarios.length > 0; else noStudents">
-          <li *ngFor="let al of usuarios">
-            <span class="student-avatar"><i class="fa-solid fa-user"></i></span>
-            <div class="student-info">
-              <strong>{{al.nombre}} {{al.apellidoPaterno}}</strong>
-              <small>{{al.correoElectronico}}</small>
-            </div>
-          </li>
-        </ul>
-        <ng-template #noStudents>
-          <p class="empty-state">Aún no hay alumnos registrados o no tienes acceso a la lista.</p>
-        </ng-template>
-      </div>
+      <!-- TARJETAS DE ESTADISTICAS -->
+      <section class="stats-grid animate-slide-up">
+        <div class="stat-card">
+          <div class="stat-icon bg-blue"><i class="fa-solid fa-users"></i></div>
+          <div class="stat-info">
+            <h3>{{totalAlumnos}}</h3>
+            <p>Alumnos</p>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon bg-purple"><i class="fa-solid fa-book"></i></div>
+          <div class="stat-info">
+            <h3>{{totalTemas}}</h3>
+            <p>Temas</p>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon bg-orange"><i class="fa-solid fa-chalkboard-user"></i></div>
+          <div class="stat-info">
+            <h3>{{totalLecciones}}</h3>
+            <p>Lecciones</p>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon bg-green"><i class="fa-solid fa-clone"></i></div>
+          <div class="stat-info">
+            <h3>{{totalFlashcards}}</h3>
+            <p>Flashcards</p>
+          </div>
+        </div>
+      </section>
 
-      <!-- Tarjeta de Flashcards Recientes -->
-      <div class="dashboard-card flashcards-card">
-        <h3>Últimas Flashcards Creadas</h3>
-        <ul class="flashcards-list" *ngIf="flashcards.length > 0; else noFlashcards">
-          <li *ngFor="let fc of flashcards">
-            <span class="fc-icon"><i class="fa-solid fa-clone"></i></span>
-            <div class="fc-info">
-              <strong>{{fc.preguntaTexto}}</strong>
-              <small>Lección ID: {{fc.leccionId}}</small>
-            </div>
-          </li>
-        </ul>
-        <ng-template #noFlashcards>
-          <p class="empty-state">No has creado flashcards recientemente.</p>
-        </ng-template>
+      <!-- CONTENIDO PRINCIPAL -->
+      <div class="dashboard-main-grid animate-slide-up-delayed">
+        
+        <!-- ALUMNOS -->
+        <div class="glass-panel panel-alumnos">
+          <div class="panel-header">
+            <h2><i class="fa-solid fa-user-graduate"></i> Mis Alumnos</h2>
+            <button class="btn-icon" title="Ver todos"><i class="fa-solid fa-ellipsis"></i></button>
+          </div>
+          
+          <div class="panel-body custom-scrollbar">
+            <ul class="user-list" *ngIf="usuarios.length > 0; else noStudents">
+              <li *ngFor="let al of usuarios" class="user-item">
+                <div class="avatar-circle">
+                  {{al.nombre.charAt(0).toUpperCase()}}{{al.apellidoPaterno.charAt(0).toUpperCase()}}
+                </div>
+                <div class="user-details">
+                  <strong>{{al.nombre}} {{al.apellidoPaterno}}</strong>
+                  <span>{{al.correoElectronico}}</span>
+                </div>
+                <div class="user-actions">
+                  <button class="btn-sm btn-outline"><i class="fa-solid fa-chart-line"></i> Progreso</button>
+                </div>
+              </li>
+            </ul>
+            <ng-template #noStudents>
+              <div class="empty-state-modern">
+                <div class="empty-icon"><i class="fa-solid fa-user-xmark"></i></div>
+                <p>Aún no hay alumnos registrados en el sistema.</p>
+              </div>
+            </ng-template>
+          </div>
+        </div>
+
+        <!-- FLASHCARDS RECIENTES -->
+        <div class="glass-panel panel-flashcards">
+          <div class="panel-header">
+            <h2><i class="fa-solid fa-bolt"></i> Últimas Flashcards</h2>
+            <button class="btn-icon" routerLink="/creacion" title="Crear nueva"><i class="fa-solid fa-plus"></i></button>
+          </div>
+
+          <div class="panel-body custom-scrollbar">
+            <ul class="activity-list" *ngIf="flashcards.length > 0; else noFlashcards">
+              <li *ngFor="let fc of flashcards" class="activity-item">
+                <div class="activity-icon"><i class="fa-solid fa-layer-group"></i></div>
+                <div class="activity-details">
+                  <h4 class="truncate-text" [title]="fc.preguntaTexto">{{fc.preguntaTexto}}</h4>
+                  <div class="activity-meta">
+                    <span class="badge" [ngClass]="getDificultadClass(fc.nivelDificultad?.nombre)">{{fc.nivelDificultad?.nombre || 'General'}}</span>
+                    <span class="meta-separator">•</span>
+                    <span>Lección ID: {{fc.leccionId}}</span>
+                  </div>
+                </div>
+                <button class="btn-sm btn-ghost"><i class="fa-solid fa-chevron-right"></i></button>
+              </li>
+            </ul>
+            <ng-template #noFlashcards>
+              <div class="empty-state-modern">
+                <div class="empty-icon"><i class="fa-solid fa-box-open"></i></div>
+                <p>No has creado flashcards recientemente.</p>
+                <button routerLink="/creacion" class="btn btn-primary mt-3">Comenzar a crear</button>
+              </div>
+            </ng-template>
+          </div>
+        </div>
+
       </div>
     </div>
   </ng-container>
