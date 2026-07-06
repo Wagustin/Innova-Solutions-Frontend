@@ -40,39 +40,26 @@ export class Inicio implements OnInit {
   }
 
   cargarDatosDashboard() {
-    this.api.getUsuarios().subscribe({
-      next: (res) => {
-        this.usuarios = res.filter(u => {
-          const r = (u.rol?.nombre || '').toUpperCase().replace(/^ROLE_/, '');
-          return r === 'ALUMNO';
-        });
-        this.totalAlumnos = this.usuarios.length;
+    const teacherId = Number(localStorage.getItem('userId'));
+
+    this.api.getMaestroStats().subscribe({
+      next: (stats) => {
+        this.totalAlumnos = stats.totalAlumnos;
+        this.totalTemas = stats.totalTemas;
+        this.totalLecciones = stats.totalLecciones;
+        this.totalFlashcards = stats.totalFlashcards;
       },
-      error: (err) => console.error('Error cargando usuarios', err)
+      error: (err) => console.error('Error cargando stats de maestro', err)
     });
 
     this.api.getFlashcards().subscribe({
       next: (res) => {
-        this.totalFlashcards = res.length;
-        this.flashcards = res.slice(-5).reverse();
+        const all = res ?? [];
+        // Filtrar últimas flashcards creadas por este profesor
+        const teacherFlashcards = all.filter((f: any) => f.leccion && f.leccion.creador && f.leccion.creador.id === teacherId);
+        this.flashcards = teacherFlashcards.slice(-5).reverse();
       },
       error: (err) => console.error('Error cargando flashcards', err)
-    });
-    
-    this.api.getTemas().subscribe({
-      next: (res) => {
-        this.temas = res;
-        this.totalTemas = res.length;
-      },
-      error: (err) => console.error('Error cargando temas', err)
-    });
-
-    this.api.getLecciones().subscribe({
-      next: (res) => {
-        this.lecciones = res;
-        this.totalLecciones = res.length;
-      },
-      error: (err) => console.error('Error cargando lecciones', err)
     });
   }
 

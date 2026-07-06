@@ -14,6 +14,7 @@ export class MisAlumnosComponent implements OnInit {
   progresos: any[] = [];
   lecciones: any[] = [];
   flashcards: any[] = [];
+  todosUsuarios: any[] = [];
   alumnoSeleccionadoId: number | null = null;
   userId: number | null = null;
   esPadre: boolean = false;
@@ -34,6 +35,7 @@ export class MisAlumnosComponent implements OnInit {
 
     this.api.getUsuarios().subscribe({
       next: (res) => {
+        this.todosUsuarios = res;
         console.log('Logged in userId:', this.userId);
         
         const miRol = (localStorage.getItem('rol') || '').toUpperCase().replace(/^ROLE_/, '');
@@ -41,10 +43,10 @@ export class MisAlumnosComponent implements OnInit {
         if (miRol === 'PROFESOR') {
           // 1. Encontrar a los PADRES que fueron creados por ESTE PROFESOR
           const misPadresIds = res
-            .filter(u => u.creadoPorId == this.userId && 
-              (u.rol?.id === 2 || (u.rol?.nombre || u.rol?.name || '').toUpperCase().includes('PADRE'))
-            )
-            .map(u => u.id);
+              .filter(u => u.creadoPorId == this.userId && 
+                (u.rol?.id === 2 || (u.rol?.nombre || u.rol?.name || '').toUpperCase().includes('PADRE'))
+              )
+              .map(u => u.id);
           
           // 2. Filtrar a los ALUMNOS que fueron creados por esos PADRES
           this.alumnos = res.filter(u => {
@@ -88,7 +90,29 @@ export class MisAlumnosComponent implements OnInit {
   }
 
   getLeccionesDeHijo(hijoId: number): any[] {
-    let misLecs = this.lecciones.filter((l: any) => l.creador && l.creador.id === this.userId);
+    const alumno = this.todosUsuarios.find(u => u.id === hijoId);
+    if (!alumno) return [{ id: 1, titulo: 'Lecciones por defecto' }];
+
+    const creadorAlumnoId = alumno.creadoPorId;
+    if (!creadorAlumnoId) return [{ id: 1, titulo: 'Lecciones por defecto' }];
+
+    const creadorAlumno = this.todosUsuarios.find(u => u.id === creadorAlumnoId);
+    if (!creadorAlumno) return [{ id: 1, titulo: 'Lecciones por defecto' }];
+
+    let profesorId: number | null = null;
+    const creadorRol = (creadorAlumno.rol?.nombre || creadorAlumno.rol?.name || '').toUpperCase().replace(/^ROLE_/, '');
+
+    if (creadorRol === 'PROFESOR' || creadorRol === 'MAESTRO') {
+      profesorId = creadorAlumno.id;
+    } else if (creadorRol === 'PADRE') {
+      profesorId = creadorAlumno.creadoPorId;
+    }
+
+    if (!profesorId) {
+      return [{ id: 1, titulo: 'Lecciones por defecto' }];
+    }
+
+    let misLecs = this.lecciones.filter((l: any) => l.creador && l.creador.id === profesorId);
     if (misLecs.length === 0) {
       return [{ id: 1, titulo: 'Lecciones por defecto' }];
     }

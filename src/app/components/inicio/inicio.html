@@ -20,28 +20,28 @@
 
       <!-- TARJETAS DE ESTADISTICAS -->
       <section class="stats-grid animate-slide-up">
-        <div class="stat-card">
+        <div class="stat-card" routerLink="/mis-alumnos" style="cursor: pointer;">
           <div class="stat-icon bg-blue"><i class="fa-solid fa-users"></i></div>
           <div class="stat-info">
             <h3>{{totalAlumnos}}</h3>
             <p>Alumnos Totales</p>
           </div>
         </div>
-        <div class="stat-card">
+        <div class="stat-card" routerLink="/creacion" style="cursor: pointer;">
           <div class="stat-icon bg-purple"><i class="fa-solid fa-book"></i></div>
           <div class="stat-info">
             <h3>{{totalTemas}}</h3>
             <p>Temas</p>
           </div>
         </div>
-        <div class="stat-card">
+        <div class="stat-card" routerLink="/creacion" style="cursor: pointer;">
           <div class="stat-icon bg-orange"><i class="fa-solid fa-chalkboard-user"></i></div>
           <div class="stat-info">
             <h3>{{totalLecciones}}</h3>
             <p>Lecciones</p>
           </div>
         </div>
-        <div class="stat-card">
+        <div class="stat-card" routerLink="/mis-flashcards" style="cursor: pointer;">
           <div class="stat-icon bg-green"><i class="fa-solid fa-clone"></i></div>
           <div class="stat-info">
             <h3>{{totalFlashcards}}</h3>
