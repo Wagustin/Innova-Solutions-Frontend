@@ -12,7 +12,10 @@
     <ng-template #defaultLinks>
       <li><a routerLink="/inicio" routerLinkActive="active">Inicio</a></li>
       <li><a routerLink="/mis-flashcards" routerLinkActive="active">Mis Flashcards</a></li>
-      <li *ngIf="puedeCrear"><a routerLink="/creacion" routerLinkActive="active">Creación</a></li>
+      <ng-container *ngIf="esProfesor">
+        <li><a routerLink="/creacion" routerLinkActive="active">Creación</a></li>
+        <li><a routerLink="/mis-alumnos" routerLinkActive="active">Mis Alumnos</a></li>
+      </ng-container>
       <li><a routerLink="/acerca-de" routerLinkActive="active">Acerca de</a></li>
     </ng-template>
   </ul>

@@ -1,0 +1,45 @@
+<div class="mis-alumnos-container">
+  <!-- LOADER -->
+  <div class="loader-container" *ngIf="isLoading">
+    <div class="spinner"></div>
+    <p>Cargando tus alumnos...</p>
+  </div>
+
+  <ng-container *ngIf="!isLoading">
+    <section class="alumnos-header animate-fade-in">
+      <div class="header-content">
+        <h1>Mis Alumnos</h1>
+        <p>Aquí puedes ver y supervisar el avance de cada uno de tus estudiantes.</p>
+      </div>
+    </section>
+
+    <!-- GRID DE ALUMNOS -->
+    <section class="alumnos-grid animate-slide-up">
+      <div class="alumno-card" *ngFor="let alumno of alumnos" (click)="verAvance(alumno.id)">
+        <div class="alumno-avatar">
+          <div class="avatar-circle">
+            {{alumno.nombre.charAt(0).toUpperCase()}}{{alumno.apellidoPaterno.charAt(0).toUpperCase()}}
+          </div>
+        </div>
+        <div class="alumno-info">
+          <h3>{{alumno.nombre}} {{alumno.apellidoPaterno}}</h3>
+          <p class="email"><i class="fa-solid fa-envelope"></i> {{alumno.correoElectronico}}</p>
+          <div class="alumno-stats">
+            <span class="badge badge-info"><i class="fa-solid fa-star"></i> Puntos: {{alumno.puntaje_Total || 0}}</span>
+          </div>
+        </div>
+        <div class="alumno-action">
+          <button class="btn-sm btn-outline btn-block">Ver Avance</button>
+        </div>
+      </div>
+      
+      <!-- EMPTY STATE -->
+      <div class="empty-state-modern" *ngIf="alumnos.length === 0">
+        <div class="empty-icon"><i class="fa-solid fa-users-slash"></i></div>
+        <h2>Aún no tienes alumnos</h2>
+        <p>Los estudiantes registrados aparecerán aquí.</p>
+      </div>
+    </section>
+  </ng-container>
+</div>
+

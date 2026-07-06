@@ -24,12 +24,19 @@ export class Inicio implements OnInit {
   
   isLoading: boolean = true;
 
+  get esMaestro(): boolean {
+    const r = (localStorage.getItem('rol') || '').toUpperCase().replace(/^ROLE_/, '');
+    const id = localStorage.getItem('rolId');
+    return r === 'PROFESOR' || r === 'MAESTRO' || id === '1';
+  }
+
   constructor(private api: ApiDataService) {}
 
   ngOnInit() {
     this.rol = (localStorage.getItem('rol') || '').toUpperCase().replace(/^ROLE_/, '');
+    const rolId = localStorage.getItem('rolId');
     
-    if (this.rol === 'PROFESOR') {
+    if (this.rol === 'PROFESOR' || this.rol === 'MAESTRO' || rolId === '1') {
       this.cargarDatosDashboard();
     } else {
       this.isLoading = false;

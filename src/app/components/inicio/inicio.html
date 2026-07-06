@@ -6,7 +6,7 @@
     <p>Cargando panel de control...</p>
   </div>
 
-  <ng-container *ngIf="rol === 'PROFESOR' && !isLoading">
+  <ng-container *ngIf="esMaestro && !isLoading">
     <div class="dashboard-wrapper">
       
       <!-- ENCABEZADO -->
@@ -29,7 +29,7 @@
           <div class="stat-icon bg-blue"><i class="fa-solid fa-users"></i></div>
           <div class="stat-info">
             <h3>{{totalAlumnos}}</h3>
-            <p>Alumnos</p>
+            <p>Alumnos Totales</p>
           </div>
         </div>
         <div class="stat-card">
@@ -50,7 +50,7 @@
           <div class="stat-icon bg-green"><i class="fa-solid fa-clone"></i></div>
           <div class="stat-info">
             <h3>{{totalFlashcards}}</h3>
-            <p>Flashcards</p>
+            <p>Flashcards Creadas</p>
           </div>
         </div>
       </section>
@@ -58,41 +58,36 @@
       <!-- CONTENIDO PRINCIPAL -->
       <div class="dashboard-main-grid animate-slide-up-delayed">
         
-        <!-- ALUMNOS -->
-        <div class="glass-panel panel-alumnos">
+        <!-- ACCESOS RÁPIDOS (Nueva tarjeta) -->
+        <div class="glass-panel panel-quick-actions">
           <div class="panel-header">
-            <h2><i class="fa-solid fa-user-graduate"></i> Mis Alumnos</h2>
-            <button class="btn-icon" title="Ver todos"><i class="fa-solid fa-ellipsis"></i></button>
+            <h2><i class="fa-solid fa-bolt"></i> Accesos Rápidos</h2>
           </div>
-          
-          <div class="panel-body custom-scrollbar">
-            <ul class="user-list" *ngIf="usuarios.length > 0; else noStudents">
-              <li *ngFor="let al of usuarios" class="user-item">
-                <div class="avatar-circle">
-                  {{al.nombre.charAt(0).toUpperCase()}}{{al.apellidoPaterno.charAt(0).toUpperCase()}}
-                </div>
-                <div class="user-details">
-                  <strong>{{al.nombre}} {{al.apellidoPaterno}}</strong>
-                  <span>{{al.correoElectronico}}</span>
-                </div>
-                <div class="user-actions">
-                  <button class="btn-sm btn-outline"><i class="fa-solid fa-chart-line"></i> Progreso</button>
-                </div>
-              </li>
-            </ul>
-            <ng-template #noStudents>
-              <div class="empty-state-modern">
-                <div class="empty-icon"><i class="fa-solid fa-user-xmark"></i></div>
-                <p>Aún no hay alumnos registrados en el sistema.</p>
-              </div>
-            </ng-template>
+          <div class="panel-body">
+            <div class="quick-actions-grid">
+               <button routerLink="/mis-alumnos" class="quick-action-card bg-light-blue">
+                 <div class="qa-icon"><i class="fa-solid fa-users-viewfinder"></i></div>
+                 <h4>Ver Mis Alumnos</h4>
+                 <p>Supervisa el avance individual</p>
+               </button>
+               <button routerLink="/creacion" class="quick-action-card bg-light-purple">
+                 <div class="qa-icon"><i class="fa-solid fa-plus-square"></i></div>
+                 <h4>Nueva Lección</h4>
+                 <p>Diseña un nuevo tema</p>
+               </button>
+               <button routerLink="/mis-flashcards" class="quick-action-card bg-light-orange">
+                 <div class="qa-icon"><i class="fa-solid fa-layer-group"></i></div>
+                 <h4>Mis Flashcards</h4>
+                 <p>Gestiona tu contenido</p>
+               </button>
+            </div>
           </div>
         </div>
 
         <!-- FLASHCARDS RECIENTES -->
         <div class="glass-panel panel-flashcards">
           <div class="panel-header">
-            <h2><i class="fa-solid fa-bolt"></i> Últimas Flashcards</h2>
+            <h2><i class="fa-solid fa-clock-rotate-left"></i> Últimas Flashcards Creadas</h2>
             <button class="btn-icon" routerLink="/creacion" title="Crear nueva"><i class="fa-solid fa-plus"></i></button>
           </div>
 
@@ -125,7 +120,7 @@
     </div>
   </ng-container>
 
-  <ng-container *ngIf="rol !== 'PROFESOR'">
+  <ng-container *ngIf="!esMaestro">
     <!-- Hero Section para Alumnos/Genérico -->
     <section class="hero-section">
       <div class="hero-text">

@@ -19,6 +19,10 @@ export class MainLayout {
     return rol === 'PROFESOR' || rolId === '1';
   }
 
+  get esProfesor(): boolean {
+    return this.puedeCrear;
+  }
+
   get esPadre(): boolean {
     const rol = (localStorage.getItem('rol') || '').toUpperCase().replace(/^ROLE_/, '');
     return rol === 'PADRE' || rol === 'TUTOR' || localStorage.getItem('rolId') === '2';

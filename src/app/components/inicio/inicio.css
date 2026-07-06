@@ -532,3 +532,61 @@
   }
 }
 
+.quick-actions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  padding: 1rem;
+}
+
+.quick-action-card {
+  border: none;
+  border-radius: 16px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.quick-action-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.qa-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  background: white;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+.quick-action-card h4 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.1rem;
+  color: #1a1a1a;
+}
+
+.quick-action-card p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.bg-light-blue { background: #e0f2fe; }
+.bg-light-blue .qa-icon { color: #0284c7; }
+
+.bg-light-purple { background: #f3e8ff; }
+.bg-light-purple .qa-icon { color: #9333ea; }
+
+.bg-light-orange { background: #ffedd5; }
+.bg-light-orange .qa-icon { color: #ea580c; }
+
