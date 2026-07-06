@@ -14,8 +14,8 @@
            (click)="seleccionarAlumno(alumno.id)"
            style="padding: 1.5rem; border-radius: 1rem; cursor: pointer; display: flex; flex-direction: column; align-items: center; text-align: center;">
         <div class="alumno-avatar" style="margin-bottom: 1rem;">
-          <div class="avatar-circle" style="width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%); color: white; display: flex; justify-content: center; align-items: center; font-size: 2.5rem; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
-            {{ (alumno.nombreCompleto || alumno.username || 'A').charAt(0).toUpperCase() }}
+          <div class="avatar-circle" style="width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%); display: flex; justify-content: center; align-items: center; font-size: 2.8rem; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+            {{ getAvatar(alumno) }}
           </div>
         </div>
         <div class="alumno-info" style="margin-bottom: 1rem; width: 100%;">
