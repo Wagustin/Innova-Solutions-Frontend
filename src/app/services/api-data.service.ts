@@ -94,4 +94,8 @@ export class ApiDataService {
     return this.http.get<any[]>(`${this.baseUrl}/relaciones-tutor-estudiante`);
   }
 
+  getMaestroStats(): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/usuarios/maestro/dashboard-stats`);
+  }
+
 }
