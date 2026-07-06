@@ -8,22 +8,22 @@
     <div class="left-col">
       <div class="modal-cards">
         <div class="modal-card bg-pastel-yellow" (click)="abrirModal('cat')">
-          <span class="modal-card-icon">📁</span>
+          <span class="modal-card-icon"><i class="fa-solid fa-folder"></i></span>
           <span class="modal-card-label">Categoría</span>
           <span class="modal-card-arrow">+</span>
         </div>
         <div class="modal-card bg-pastel-blue" (click)="abrirModal('tema')">
-          <span class="modal-card-icon">📂</span>
+          <span class="modal-card-icon"><i class="fa-solid fa-folder-open"></i></span>
           <span class="modal-card-label">Tema</span>
           <span class="modal-card-arrow">+</span>
         </div>
         <div class="modal-card bg-pastel-yellow" (click)="abrirModal('leccion')">
-          <span class="modal-card-icon">📖</span>
+          <span class="modal-card-icon"><i class="fa-solid fa-book-open"></i></span>
           <span class="modal-card-label">Lección</span>
           <span class="modal-card-arrow">+</span>
         </div>
         <div class="modal-card bg-pastel-blue" (click)="abrirModal('flashcard')">
-          <span class="modal-card-icon">🃏</span>
+          <span class="modal-card-icon"><i class="fa-solid fa-clone"></i></span>
           <span class="modal-card-label">Flashcard</span>
           <span class="modal-card-arrow">+</span>
         </div>
@@ -37,7 +37,7 @@
         <!-- Modal CATEGORÍA -->
         <div *ngIf="modalAbierto === 'cat'">
           <div class="modal-header">
-            <h3>📁 Nueva Categoría</h3>
+            <h3><i class="fa-solid fa-folder"></i> Nueva Categoría</h3>
             <button class="modal-close" (click)="cerrarModal()">✕</button>
           </div>
           <form [formGroup]="catForm" (ngSubmit)="saveCat()">
@@ -56,7 +56,7 @@
         <!-- Modal TEMA -->
         <div *ngIf="modalAbierto === 'tema'">
           <div class="modal-header">
-            <h3>📂 Nuevo Tema</h3>
+            <h3><i class="fa-solid fa-folder-open"></i> Nuevo Tema</h3>
             <button class="modal-close" (click)="cerrarModal()">✕</button>
           </div>
           <form [formGroup]="temaForm" (ngSubmit)="saveTema()">
@@ -78,7 +78,7 @@
         <!-- Modal LECCIÓN -->
         <div *ngIf="modalAbierto === 'leccion'">
           <div class="modal-header">
-            <h3>📖 Nueva Lección</h3>
+            <h3><i class="fa-solid fa-book-open"></i> Nueva Lección</h3>
             <button class="modal-close" (click)="cerrarModal()">✕</button>
           </div>
           <form [formGroup]="leccionForm" (ngSubmit)="saveLeccion()">
@@ -107,7 +107,7 @@
         <!-- Modal FLASHCARD -->
         <div *ngIf="modalAbierto === 'flashcard'">
           <div class="modal-header">
-            <h3>🃏 {{ editId ? 'Editar' : 'Nueva' }} Flashcard</h3>
+            <h3><i class="fa-solid fa-clone"></i> {{ editId ? 'Editar' : 'Nueva' }} Flashcard</h3>
             <button class="modal-close" (click)="cerrarModal()">✕</button>
           </div>
           <form [formGroup]="flashcardForm" (ngSubmit)="saveFlashcard()">
@@ -142,7 +142,7 @@
                 </div>
                 <div class="check-group">
                   <input type="checkbox" formControlName="resp1Correcta" id="resp1Correcta">
-                  <label for="resp1Correcta">✅ Correcta</label>
+                  <label for="resp1Correcta"><i class="fa-solid fa-check"></i> Correcta</label>
                 </div>
                 <div class="form-group feedback-group">
                   <label>Feedback</label>
@@ -156,7 +156,7 @@
                 </div>
                 <div class="check-group">
                   <input type="checkbox" formControlName="resp2Correcta" id="resp2Correcta">
-                  <label for="resp2Correcta">✅ Correcta</label>
+                  <label for="resp2Correcta"><i class="fa-solid fa-check"></i> Correcta</label>
                 </div>
                 <div class="form-group feedback-group">
                   <label>Feedback</label>

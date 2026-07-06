@@ -1,66 +1,120 @@
 <div class="inicio-container">
   
-  <!-- Hero Section -->
-  <section class="hero-section">
-    <div class="hero-text">
-      <h1>APRENDE AHORA MISMO DE LA FORMA MÁS <span class="highlight-blue">DIVERTIDA POSIBLEEEE!</span></h1>
-      <button class="btn btn-black hero-btn">¡Comenzar ahora!</button>
-    </div>
-    <div class="hero-image">
-      <div class="img-placeholder">🚀 Ilustración</div>
-    </div>
-  </section>
+  <ng-container *ngIf="rol === 'PROFESOR'">
+    <section class="dashboard-header">
+      <h1>Panel de Maestro</h1>
+      <p>Bienvenido a tu panel de control. Desde aquí puedes gestionar a tus alumnos y contenido.</p>
+    </section>
 
-  <!-- Content Section -->
-  <section class="content-section">
-    <h2 class="section-subtitle">Ganas de aprender + buenas flashcards = <span class="highlight-pink">aprendizaje perfecto</span></h2>
-    
-    <div class="subjects-container">
-      <div class="subject-card">
-        <div class="subject-icon">🧮</div>
-        <h3>Problemas matemáticos</h3>
+    <div class="dashboard-grid">
+      <!-- Tarjeta de Acciones Rápidas -->
+      <div class="dashboard-card actions-card">
+        <h3>Acciones Rápidas</h3>
+        <div class="actions-list">
+          <a routerLink="/creacion" class="btn btn-primary action-btn"><i class="fa-solid fa-plus"></i> Crear Nueva Lección</a>
+          <a routerLink="/creacion" class="btn btn-secondary action-btn"><i class="fa-solid fa-plus"></i> Añadir Flashcard</a>
+        </div>
       </div>
-      <div class="subject-card">
-        <div class="subject-icon">📐</div>
-        <h3>Geometría</h3>
+
+      <!-- Tarjeta de Alumnos -->
+      <div class="dashboard-card students-card">
+        <h3>Mis Alumnos</h3>
+        <ul class="students-list" *ngIf="usuarios.length > 0; else noStudents">
+          <li *ngFor="let al of usuarios">
+            <span class="student-avatar"><i class="fa-solid fa-user"></i></span>
+            <div class="student-info">
+              <strong>{{al.nombre}} {{al.apellidoPaterno}}</strong>
+              <small>{{al.correoElectronico}}</small>
+            </div>
+          </li>
+        </ul>
+        <ng-template #noStudents>
+          <p class="empty-state">Aún no hay alumnos registrados o no tienes acceso a la lista.</p>
+        </ng-template>
       </div>
-      <div class="subject-card">
-        <div class="subject-icon">🧠</div>
-        <h3>Lógica matemática</h3>
-      </div>
-      <div class="subject-card">
-        <div class="subject-icon">💡</div>
-        <h3>Resolución de problemas</h3>
+
+      <!-- Tarjeta de Flashcards Recientes -->
+      <div class="dashboard-card flashcards-card">
+        <h3>Últimas Flashcards Creadas</h3>
+        <ul class="flashcards-list" *ngIf="flashcards.length > 0; else noFlashcards">
+          <li *ngFor="let fc of flashcards">
+            <span class="fc-icon"><i class="fa-solid fa-clone"></i></span>
+            <div class="fc-info">
+              <strong>{{fc.preguntaTexto}}</strong>
+              <small>Lección ID: {{fc.leccionId}}</small>
+            </div>
+          </li>
+        </ul>
+        <ng-template #noFlashcards>
+          <p class="empty-state">No has creado flashcards recientemente.</p>
+        </ng-template>
       </div>
     </div>
-  </section>
+  </ng-container>
 
-  <!-- Testimonials Section -->
-  <section class="testimonials-section">
-    <h2 class="section-title">Nuestros resultados hablan por si solos 🏆</h2>
-    
-    <div class="testimonials-grid">
-      <div class="testimonial-card">
-        <p class="quote">"Desde que uso Innova-Solutions, mis calificaciones en matemáticas han subido de forma increíble. ¡Es muy divertido!"</p>
-        <div class="author">
-          <div class="author-img">👤</div>
-          <div class="author-info">
-            <h4>María Lopez</h4>
-            <span>Estudiante</span>
+  <ng-container *ngIf="rol !== 'PROFESOR'">
+    <!-- Hero Section para Alumnos/Genérico -->
+    <section class="hero-section">
+      <div class="hero-text">
+        <h1>APRENDE AHORA MISMO DE LA FORMA MÁS <span class="highlight-blue">DIVERTIDA POSIBLEEEE!</span></h1>
+        <button class="btn btn-black hero-btn" routerLink="/mis-flashcards">¡Comenzar ahora!</button>
+      </div>
+      <div class="hero-image">
+        <div class="img-placeholder"><i class="fa-solid fa-rocket"></i> Ilustración</div>
+      </div>
+    </section>
+
+    <!-- Content Section -->
+    <section class="content-section">
+      <h2 class="section-subtitle">Ganas de aprender + buenas flashcards = <span class="highlight-pink">aprendizaje perfecto</span></h2>
+      
+      <div class="subjects-container">
+        <div class="subject-card">
+          <div class="subject-icon"><i class="fa-solid fa-calculator"></i></div>
+          <h3>Problemas matemáticos</h3>
+        </div>
+        <div class="subject-card">
+          <div class="subject-icon"><i class="fa-solid fa-ruler-combined"></i></div>
+          <h3>Geometría</h3>
+        </div>
+        <div class="subject-card">
+          <div class="subject-icon"><i class="fa-solid fa-brain"></i></div>
+          <h3>Lógica matemática</h3>
+        </div>
+        <div class="subject-card">
+          <div class="subject-icon"><i class="fa-solid fa-lightbulb"></i></div>
+          <h3>Resolución de problemas</h3>
+        </div>
+      </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="testimonials-section">
+      <h2 class="section-title">Nuestros resultados hablan por si solos <i class="fa-solid fa-trophy"></i></h2>
+      
+      <div class="testimonials-grid">
+        <div class="testimonial-card">
+          <p class="quote">"Desde que uso Innova-Solutions, mis calificaciones en matemáticas han subido de forma increíble. ¡Es muy divertido!"</p>
+          <div class="author">
+            <div class="author-img"><i class="fa-solid fa-user"></i></div>
+            <div class="author-info">
+              <h4>María Lopez</h4>
+              <span>Estudiante</span>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <p class="quote">"Crear flashcards me ha ayudado a memorizar fórmulas de geometría sin esfuerzo. 100% recomendado."</p>
+          <div class="author">
+            <div class="author-img"><i class="fa-solid fa-user"></i></div>
+            <div class="author-info">
+              <h4>Carlos Ruiz</h4>
+              <span>Estudiante</span>
+            </div>
           </div>
         </div>
       </div>
-      <div class="testimonial-card">
-        <p class="quote">"Crear flashcards me ha ayudado a memorizar fórmulas de geometría sin esfuerzo. 100% recomendado."</p>
-        <div class="author">
-          <div class="author-img">👤</div>
-          <div class="author-info">
-            <h4>Carlos Ruiz</h4>
-            <span>Estudiante</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+    </section>
+  </ng-container>
 
 </div>

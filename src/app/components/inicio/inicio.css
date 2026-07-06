@@ -134,3 +134,104 @@
   .hero-section { flex-direction: column; text-align: center; }
   .hero-text h1 { font-size: 2.5rem; }
 }
+
+/* Dashboard Maestro */
+.dashboard-header {
+  margin-bottom: 40px;
+  text-align: left;
+}
+.dashboard-header h1 {
+  font-size: 2.5rem;
+  font-weight: 900;
+  margin-bottom: 10px;
+}
+.dashboard-header p {
+  font-size: 1.1rem;
+  color: #555;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+  margin-bottom: 60px;
+}
+
+.dashboard-card {
+  background: white;
+  padding: 30px;
+  border-radius: 20px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+  display: flex;
+  flex-direction: column;
+}
+.dashboard-card h3 {
+  font-size: 1.3rem;
+  font-weight: 800;
+  margin-bottom: 20px;
+  color: var(--text-dark);
+  border-bottom: 2px solid var(--bg-pastel-blue);
+  padding-bottom: 10px;
+}
+
+.actions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+.action-btn {
+  text-align: center;
+  padding: 15px;
+  font-size: 1.1rem;
+}
+.btn-secondary {
+  background-color: var(--bg-pastel-pink);
+  color: var(--text-dark);
+}
+
+.students-list, .flashcards-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+.students-list li, .flashcards-list li {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 10px;
+  background-color: #f9f9f9;
+  border-radius: 12px;
+}
+.student-avatar, .fc-icon {
+  font-size: 2rem;
+  background: white;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+.student-info, .fc-info {
+  display: flex;
+  flex-direction: column;
+}
+.student-info strong, .fc-info strong {
+  font-size: 1rem;
+  font-weight: 700;
+}
+.student-info small, .fc-info small {
+  color: #777;
+  font-size: 0.85rem;
+}
+
+.empty-state {
+  color: #888;
+  font-style: italic;
+  text-align: center;
+  margin-top: 20px;
+}
