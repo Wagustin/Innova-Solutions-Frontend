@@ -56,8 +56,6 @@ export class RegistroAlumno implements OnInit {
     this.serverErrorMessage = '';
   }
 
-  vista: 'menu' | 'registro' | 'lista' = 'menu';
-
   // Navigation methods
   irARegistro(): void {
     this.inicializarFormulario();
