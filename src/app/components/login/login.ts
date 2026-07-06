@@ -17,9 +17,11 @@ export class Login implements OnInit {
   loginSuccess = false;
   hasAuthError = false;
   sessionExpired = false;
+  idleTimeout = false;
 
   constructor(private fb: FormBuilder, private router: Router, private route: ActivatedRoute, private authService: AuthService) {
     this.sessionExpired = this.route.snapshot.queryParams['expired'] === '1';
+    this.idleTimeout = this.route.snapshot.queryParams['idle'] === 'true';
   }
 
   ngOnInit(): void {

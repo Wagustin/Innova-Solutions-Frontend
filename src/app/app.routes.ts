@@ -13,6 +13,7 @@ import { MiPerfil } from './components/mi-perfil/mi-perfil';
 import { AuthGuard } from './guards/auth.guard';
 import { PadreDashboard } from './components/padre-dashboard/padre-dashboard';
 import { RegistroAlumno } from './components/registro-alumno/registro-alumno';
+import { MisAlumnosComponent } from './components/mis-alumnos/mis-alumnos';
 
 export const routes: Routes = [
   { path: 'welcome', component: Welcome },
@@ -32,7 +33,8 @@ export const routes: Routes = [
       { path: 'acerca-de', component: AcercaDe },
       { path: 'mi-perfil', component: MiPerfil },
       { path: 'padre/dashboard', component: PadreDashboard },
-      { path: 'padre/registrar-alumno', component: RegistroAlumno }
+      { path: 'padre/registrar-alumno', component: RegistroAlumno },
+      { path: 'mis-alumnos', component: MisAlumnosComponent }
     ]
   },
   { path: '**', redirectTo: 'welcome' }

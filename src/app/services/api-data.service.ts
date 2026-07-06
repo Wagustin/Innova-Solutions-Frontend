@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class ApiDataService {
-  private baseUrl = 'http://localhost:8080/api';
+  private baseUrl = '/api';
 
   constructor(private http: HttpClient) {}
 
@@ -47,6 +47,11 @@ export class ApiDataService {
   crearFlashcardConOpciones(payload: any): Observable<any> {
     return this.http.post(`${this.baseUrl}/flashcards/con-opciones`, payload);
   }
+
+  getReporteDificultad(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}/flashcards/reporte/dificultad`);
+  }
+
   actualizarFlashcard(id: number, payload: any): Observable<any> {
     return this.http.put(`${this.baseUrl}/flashcards/${id}`, payload);
   }
@@ -88,4 +93,5 @@ export class ApiDataService {
   getRelacionesTutorEstudiante(): Observable<any[]> {
     return this.http.get<any[]>(`${this.baseUrl}/relaciones-tutor-estudiante`);
   }
+
 }

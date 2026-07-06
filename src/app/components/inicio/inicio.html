@@ -1,66 +1,175 @@
 <div class="inicio-container">
   
-  <!-- Hero Section -->
-  <section class="hero-section">
-    <div class="hero-text">
-      <h1>APRENDE AHORA MISMO DE LA FORMA MÁS <span class="highlight-blue">DIVERTIDA POSIBLEEEE!</span></h1>
-      <button class="btn btn-black hero-btn">¡Comenzar ahora!</button>
-    </div>
-    <div class="hero-image">
-      <div class="img-placeholder">🚀 Ilustración</div>
-    </div>
-  </section>
 
-  <!-- Content Section -->
-  <section class="content-section">
-    <h2 class="section-subtitle">Ganas de aprender + buenas flashcards = <span class="highlight-pink">aprendizaje perfecto</span></h2>
-    
-    <div class="subjects-container">
-      <div class="subject-card">
-        <div class="subject-icon">🧮</div>
-        <h3>Problemas matemáticos</h3>
-      </div>
-      <div class="subject-card">
-        <div class="subject-icon">📐</div>
-        <h3>Geometría</h3>
-      </div>
-      <div class="subject-card">
-        <div class="subject-icon">🧠</div>
-        <h3>Lógica matemática</h3>
-      </div>
-      <div class="subject-card">
-        <div class="subject-icon">💡</div>
-        <h3>Resolución de problemas</h3>
-      </div>
-    </div>
-  </section>
+  <ng-container *ngIf="esMaestro">
+    <div class="dashboard-wrapper">
+      
+      <!-- ENCABEZADO -->
+      <section class="dashboard-header animate-fade-in">
+        <div class="header-content">
+          <h1>Panel de Maestro</h1>
+          <p>Gestiona tu contenido, supervisa a tus alumnos y crea nuevas experiencias de aprendizaje.</p>
+        </div>
+        <div class="header-actions">
+          <button routerLink="/creacion" class="btn-create-pulse">
+            <i class="fa-solid fa-wand-magic-sparkles"></i>
+            <span>Crear Contenido</span>
+          </button>
+        </div>
+      </section>
 
-  <!-- Testimonials Section -->
-  <section class="testimonials-section">
-    <h2 class="section-title">Nuestros resultados hablan por si solos 🏆</h2>
-    
-    <div class="testimonials-grid">
-      <div class="testimonial-card">
-        <p class="quote">"Desde que uso Innova-Solutions, mis calificaciones en matemáticas han subido de forma increíble. ¡Es muy divertido!"</p>
-        <div class="author">
-          <div class="author-img">👤</div>
-          <div class="author-info">
-            <h4>María Lopez</h4>
-            <span>Estudiante</span>
+      <!-- TARJETAS DE ESTADISTICAS -->
+      <section class="stats-grid animate-slide-up">
+        <div class="stat-card">
+          <div class="stat-icon bg-blue"><i class="fa-solid fa-users"></i></div>
+          <div class="stat-info">
+            <h3>{{totalAlumnos}}</h3>
+            <p>Alumnos Totales</p>
           </div>
         </div>
-      </div>
-      <div class="testimonial-card">
-        <p class="quote">"Crear flashcards me ha ayudado a memorizar fórmulas de geometría sin esfuerzo. 100% recomendado."</p>
-        <div class="author">
-          <div class="author-img">👤</div>
-          <div class="author-info">
-            <h4>Carlos Ruiz</h4>
-            <span>Estudiante</span>
+        <div class="stat-card">
+          <div class="stat-icon bg-purple"><i class="fa-solid fa-book"></i></div>
+          <div class="stat-info">
+            <h3>{{totalTemas}}</h3>
+            <p>Temas</p>
           </div>
         </div>
+        <div class="stat-card">
+          <div class="stat-icon bg-orange"><i class="fa-solid fa-chalkboard-user"></i></div>
+          <div class="stat-info">
+            <h3>{{totalLecciones}}</h3>
+            <p>Lecciones</p>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon bg-green"><i class="fa-solid fa-clone"></i></div>
+          <div class="stat-info">
+            <h3>{{totalFlashcards}}</h3>
+            <p>Flashcards Creadas</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- CONTENIDO PRINCIPAL -->
+      <div class="dashboard-main-grid animate-slide-up-delayed">
+        
+        <!-- ACCESOS RÁPIDOS (Nueva tarjeta) -->
+        <div class="glass-panel panel-quick-actions">
+          <div class="panel-header">
+            <h2><i class="fa-solid fa-bolt"></i> Accesos Rápidos</h2>
+          </div>
+          <div class="panel-body">
+            <div class="quick-actions-grid">
+               <button routerLink="/mis-alumnos" class="quick-action-card bg-light-blue">
+                 <div class="qa-icon"><i class="fa-solid fa-users-viewfinder"></i></div>
+                 <h4>Ver Mis Alumnos</h4>
+                 <p>Supervisa el avance individual</p>
+               </button>
+               <button routerLink="/creacion" class="quick-action-card bg-light-purple">
+                 <div class="qa-icon"><i class="fa-solid fa-plus-square"></i></div>
+                 <h4>Nueva Lección</h4>
+                 <p>Diseña un nuevo tema</p>
+               </button>
+               <button routerLink="/mis-flashcards" class="quick-action-card bg-light-orange">
+                 <div class="qa-icon"><i class="fa-solid fa-layer-group"></i></div>
+                 <h4>Mis Flashcards</h4>
+                 <p>Gestiona tu contenido</p>
+               </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- FLASHCARDS RECIENTES -->
+        <div class="glass-panel panel-flashcards">
+          <div class="panel-header">
+            <h2><i class="fa-solid fa-clock-rotate-left"></i> Últimas Flashcards Creadas</h2>
+            <button class="btn-icon" routerLink="/creacion" title="Crear nueva"><i class="fa-solid fa-plus"></i></button>
+          </div>
+
+          <div class="panel-body custom-scrollbar">
+            <ul class="activity-list" *ngIf="flashcards.length > 0; else noFlashcards">
+              <li *ngFor="let fc of flashcards" class="activity-item">
+                <div class="activity-icon"><i class="fa-solid fa-layer-group"></i></div>
+                <div class="activity-details">
+                  <h4 class="truncate-text" [title]="fc.preguntaTexto">{{fc.preguntaTexto}}</h4>
+                  <div class="activity-meta">
+                    <span class="badge" [ngClass]="getDificultadClass(fc.nivelDificultad?.nombre)">{{fc.nivelDificultad?.nombre || 'General'}}</span>
+                    <span class="meta-separator">•</span>
+                    <span>Lección ID: {{fc.leccionId}}</span>
+                  </div>
+                </div>
+                <button class="btn-sm btn-ghost"><i class="fa-solid fa-chevron-right"></i></button>
+              </li>
+            </ul>
+            <ng-template #noFlashcards>
+              <div class="empty-state-modern">
+                <div class="empty-icon"><i class="fa-solid fa-box-open"></i></div>
+                <p>No has creado flashcards recientemente.</p>
+                <button routerLink="/creacion" class="btn btn-primary mt-3">Comenzar a crear</button>
+              </div>
+            </ng-template>
+          </div>
+        </div>
+
       </div>
     </div>
-  </section>
+  </ng-container>
+
+  <ng-container *ngIf="!esMaestro">
+    <div class="dashboard-wrapper">
+      
+      <!-- ENCABEZADO ALUMNO -->
+      <section class="dashboard-header animate-fade-in">
+        <div class="header-content">
+          <h1>¡Hola! Bienvenido a tu panel de estudio</h1>
+          <p>Continúa donde lo dejaste, repasa tus flashcards y mejora tus resultados.</p>
+        </div>
+        <div class="header-actions">
+          <button routerLink="/mis-flashcards" class="btn-create-pulse bg-purple">
+            <i class="fa-solid fa-play"></i>
+            <span>Estudiar Ahora</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- TARJETAS DE ESTADISTICAS ALUMNO -->
+      <section class="stats-grid animate-slide-up">
+        <div class="stat-card">
+          <div class="stat-icon bg-blue"><i class="fa-solid fa-layer-group"></i></div>
+          <div class="stat-info">
+            <h3>Nuevas</h3>
+            <p>Flashcards Pendientes</p>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon bg-green"><i class="fa-solid fa-check-double"></i></div>
+          <div class="stat-info">
+            <h3>Progreso</h3>
+            <p>Lecciones Completadas</p>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon bg-orange"><i class="fa-solid fa-fire"></i></div>
+          <div class="stat-info">
+            <h3>Racha</h3>
+            <p>Días de estudio</p>
+          </div>
+        </div>
+        <div class="stat-card" style="display: flex; flex-direction: row; justify-content: space-between; align-items: center; background: linear-gradient(135deg, #8e2de2, #4a00e0); color: white; border: none; grid-column: 1 / -1; padding: 1rem 1.5rem; min-height: auto; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+          <div class="stat-info" style="display: flex; align-items: center; gap: 12px;">
+            <div class="stat-icon" style="background: rgba(255,255,255,0.2); color: white; width: 40px; height: 40px; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; border-radius: 8px;"><i class="fa-solid fa-rocket"></i></div>
+            <div style="text-align: left;">
+              <h3 style="color: white; margin-bottom: 2px; font-size: 1.2rem;">Continúa aprendiendo</h3>
+              <p style="color: rgba(255,255,255,0.9); font-size: 0.9rem; margin: 0;">¡Todo listo para empezar a estudiar!</p>
+            </div>
+          </div>
+          <button routerLink="/mis-flashcards" style="background-color: #ffffff; color: #6a1b9a; border: none; padding: 0.6rem 1.2rem; border-radius: 8px; font-weight: bold; cursor: pointer; display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.95rem; box-shadow: 0 2px 8px rgba(0,0,0,0.2);">
+            <i class="fa-solid fa-play"></i> Empezar
+          </button>
+        </div>
+      </section>
+      
+    </div>
+  </ng-container>
 
 </div>
