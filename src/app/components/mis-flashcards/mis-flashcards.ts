@@ -43,6 +43,12 @@ export class MisFlashcards implements OnInit {
     return texto.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
   }
 
+  get esProfesor(): boolean {
+    const r = this.rol;
+    const id = localStorage.getItem('rolId');
+    return r === 'PROFESOR' || r === 'MAESTRO' || id === '1';
+  }
+
   get flashcardsFiltradas(): any[] {
     let resultado = this.flashcards;
     const term = this.normalizar(this.filtro);
@@ -163,9 +169,5 @@ export class MisFlashcards implements OnInit {
   evaluate(card: Flashcard) {
     if (!card.selectedOption) return;
     card.isAnswered = true;
-  }
-
-  irAResponder(id: number): void {
-    this.router.navigate(['/responder', id]);
   }
 }

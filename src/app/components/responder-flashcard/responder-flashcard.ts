@@ -11,8 +11,8 @@ import { ApiDataService } from '../../services/api-data.service';
     <div class="responder-container" *ngIf="flashcard">
       <div style="display:flex; gap:10px; margin-bottom:20px; align-items:center;">
         <button class="btn btn-black" (click)="router.navigate(['/mis-flashcards'])">← Volver</button>
-        <button class="btn btn-black" style="background:#e67e22" (click)="editar()" *ngIf="rol === 'PROFESOR'">✏️ Editar</button>
-        <button class="btn btn-black" style="background:#c0392b" (click)="eliminar()" *ngIf="rol === 'PROFESOR'">🗑️ Borrar</button>
+        <button class="btn btn-black" style="background:#e67e22" (click)="editar()" *ngIf="esProfesor">✏️ Editar</button>
+        <button class="btn btn-black" style="background:#c0392b" (click)="eliminar()" *ngIf="esProfesor">🗑️ Borrar</button>
       </div>
 
       <div class="flashcard-card" [style.backgroundColor]="flashcard.colorFondo || '#fdf7c3'">
@@ -67,6 +67,12 @@ export class ResponderFlashcard implements OnInit {
   respuestaVisible = false;
   progresoGuardado = false;
   rol = '';
+
+  get esProfesor(): boolean {
+    const r = this.rol;
+    const id = localStorage.getItem('rolId');
+    return r === 'PROFESOR' || r === 'MAESTRO' || id === '1';
+  }
 
   constructor(
     private route: ActivatedRoute,
