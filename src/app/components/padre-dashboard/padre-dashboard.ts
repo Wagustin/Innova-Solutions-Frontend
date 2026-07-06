@@ -2,11 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ApiDataService } from '../../services/api-data.service';
 
-export interface DificultadData {
+interface DificultadData {
   dificultad: string;
   total: number;
-  cssClass?: string;
-  widthPercent?: number;
+  cssClass: string;
+  widthPercent: number;
 }
 
 @Component({

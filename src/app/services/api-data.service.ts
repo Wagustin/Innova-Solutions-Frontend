@@ -93,4 +93,5 @@ export class ApiDataService {
   getRelacionesTutorEstudiante(): Observable<any[]> {
     return this.http.get<any[]>(`${this.baseUrl}/relaciones-tutor-estudiante`);
   }
+
 }
