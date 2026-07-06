@@ -11,7 +11,6 @@ import { ApiDataService } from '../../services/api-data.service';
 })
 export class MisAlumnosComponent implements OnInit {
   alumnos: any[] = [];
-  isLoading: boolean = true;
 
   constructor(private api: ApiDataService) {}
 
@@ -22,11 +21,9 @@ export class MisAlumnosComponent implements OnInit {
           const r = (u.rol?.nombre || '').toUpperCase().replace(/^ROLE_/, '');
           return r === 'ALUMNO';
         });
-        this.isLoading = false;
       },
       error: (err) => {
         console.error('Error cargando alumnos', err);
-        this.isLoading = false;
       }
     });
   }

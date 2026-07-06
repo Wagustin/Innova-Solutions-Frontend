@@ -1,12 +1,7 @@
 <div class="inicio-container">
   
-  <!-- LOADER -->
-  <div class="loader-container" *ngIf="isLoading">
-    <div class="spinner"></div>
-    <p>Cargando panel de control...</p>
-  </div>
 
-  <ng-container *ngIf="esMaestro && !isLoading">
+  <ng-container *ngIf="esMaestro">
     <div class="dashboard-wrapper">
       
       <!-- ENCABEZADO -->

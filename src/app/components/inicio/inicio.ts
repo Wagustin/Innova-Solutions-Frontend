@@ -21,8 +21,6 @@ export class Inicio implements OnInit {
   totalFlashcards: number = 0;
   totalLecciones: number = 0;
   totalTemas: number = 0;
-  
-  isLoading: boolean = true;
 
   get esMaestro(): boolean {
     const r = (localStorage.getItem('rol') || '').toUpperCase().replace(/^ROLE_/, '');
@@ -38,8 +36,6 @@ export class Inicio implements OnInit {
     
     if (this.rol === 'PROFESOR' || this.rol === 'MAESTRO' || rolId === '1') {
       this.cargarDatosDashboard();
-    } else {
-      this.isLoading = false;
     }
   }
 
@@ -75,19 +71,9 @@ export class Inicio implements OnInit {
       next: (res) => {
         this.lecciones = res;
         this.totalLecciones = res.length;
-        this.checkLoading();
       },
-      error: (err) => {
-        console.error('Error cargando lecciones', err);
-        this.checkLoading();
-      }
+      error: (err) => console.error('Error cargando lecciones', err)
     });
-  }
-  
-  checkLoading() {
-    setTimeout(() => {
-      this.isLoading = false;
-    }, 500); // Pequeño delay para mostrar la animación de carga
   }
 
   getDificultadClass(dificultad: string): string {
