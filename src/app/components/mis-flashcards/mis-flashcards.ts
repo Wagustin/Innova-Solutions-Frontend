@@ -160,4 +160,8 @@ export class MisFlashcards implements OnInit {
     if (!card.selectedOption) return;
     card.isAnswered = true;
   }
+
+  irAResponder(id: number): void {
+    this.router.navigate(['/responder', id]);
+  }
 }
