@@ -50,6 +50,41 @@
   transition: transform 0.3s ease;
 }
 
+.avatar-emoji {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: var(--bg-pastel-pink);
+  border: 4px solid #fdf7c3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease;
+}
+
+.avatar-inicial {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 4px solid #fdf7c3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #555;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease;
+}
+.avatar-inicial.bg-padre {
+  background: var(--bg-pastel-blue);
+}
+.avatar-inicial.bg-profesor {
+  background: #d4edda;
+}
+
 .css-avatar {
   width: 100%;
   height: 100%;
