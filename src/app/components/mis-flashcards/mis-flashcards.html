@@ -30,6 +30,25 @@
         <p class="question" [style.color]="card.colorTexto || 'var(--text-dark)'">{{ card.preguntaTexto }}</p>
         <div class="img-placeholder" *ngIf="!card.imagenUrl">📷 Imagen</div>
         <img *ngIf="card.imagenUrl" [src]="card.imagenUrl" style="max-width:100%; border-radius:12px; max-height:120px;" alt="Flashcard">
+        
+        <div class="options-container" *ngIf="card.opciones?.length">
+          <div *ngFor="let option of card.opciones"
+               class="option-item"
+               [ngClass]="{
+                 'selected': card.selectedOption === option,
+                 'disabled': card.isAnswered,
+                 'correct': card.isAnswered && option.esCorrecta,
+                 'incorrect': card.isAnswered && card.selectedOption === option && !option.esCorrecta
+               }"
+               (click)="selectOption(card, option)">
+            {{ option.textoOpcion }}
+          </div>
+        </div>
+
+        <div *ngIf="card.isAnswered && card.selectedOption" class="feedback-box" [ngClass]="card.selectedOption.esCorrecta ? 'correct' : 'incorrect'">
+          <p class="feedback-title">{{ card.selectedOption.esCorrecta ? '¡Correcto!' : 'Incorrecto' }}</p>
+          <p class="feedback-text">{{ card.selectedOption.feedbackRespuesta }}</p>
+        </div>
       </div>
       
       <div class="card-actions">

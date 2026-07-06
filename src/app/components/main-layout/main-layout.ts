@@ -19,6 +19,15 @@ export class MainLayout {
     return rol === 'PROFESOR' || rolId === '1';
   }
 
+  get esPadre(): boolean {
+    const rol = (localStorage.getItem('rol') || '').toUpperCase().replace(/^ROLE_/, '');
+    return rol === 'PADRE' || rol === 'TUTOR' || localStorage.getItem('rolId') === '2';
+  }
+
+  get getInicioLink(): string {
+    return this.esPadre ? '/padre/dashboard' : '/inicio';
+  }
+
   constructor(private router: Router) {}
 
   toggleProfileMenu() {

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { ApiDataService } from '../../services/api-data.service';
@@ -7,11 +7,15 @@ import { ApiDataService } from '../../services/api-data.service';
 @Component({
   selector: 'app-registro-alumno',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [ReactiveFormsModule, FormsModule, CommonModule],
   templateUrl: './registro-alumno.html',
   styleUrls: ['./registro-alumno.css']
 })
 export class RegistroAlumno implements OnInit {
+  // Navigation / Vista state: 'menu' | 'registro' | 'lista'
+  vista: 'menu' | 'registro' | 'lista' = 'menu';
+  
+  // Registration form state
   alumnoForm!: FormGroup;
   submitAttempted = false;
   registrationSuccess = false;
@@ -285,6 +289,7 @@ export class RegistroAlumno implements OnInit {
 
     this.apiService.registrarAlumno(payload).subscribe({
       next: (res) => {
+        this.hijos.push(res);
         this.registrationSuccess = true;
         this.alumnoForm.disable();
         setTimeout(() => { this.cargarDatos(); this.volverMenu(); }, 1500);

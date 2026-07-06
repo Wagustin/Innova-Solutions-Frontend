@@ -1,13 +1,20 @@
 <nav class="navbar">
-  <div class="nav-brand" routerLink="/inicio">
+  <div class="nav-brand" [routerLink]="getInicioLink">
     <span class="icon">📘</span> Innova-Solutions
   </div>
   
   <ul class="nav-links">
-    <li><a routerLink="/inicio" routerLinkActive="active">Inicio</a></li>
-    <li><a routerLink="/mis-flashcards" routerLinkActive="active">Mis Flashcards</a></li>
-    <li *ngIf="puedeCrear"><a routerLink="/creacion" routerLinkActive="active">Creación</a></li>
-    <li><a routerLink="/acerca-de" routerLinkActive="active">Acerca de</a></li>
+    <ng-container *ngIf="esPadre; else defaultLinks">
+      <li><a routerLink="/padre/dashboard" routerLinkActive="active">Inicio</a></li>
+      <li><a routerLink="/padre/registrar-alumno" routerLinkActive="active">Mis Hijos</a></li>
+      <li><a routerLink="/acerca-de" routerLinkActive="active">Acerca de</a></li>
+    </ng-container>
+    <ng-template #defaultLinks>
+      <li><a routerLink="/inicio" routerLinkActive="active">Inicio</a></li>
+      <li><a routerLink="/mis-flashcards" routerLinkActive="active">Mis Flashcards</a></li>
+      <li *ngIf="puedeCrear"><a routerLink="/creacion" routerLinkActive="active">Creación</a></li>
+      <li><a routerLink="/acerca-de" routerLinkActive="active">Acerca de</a></li>
+    </ng-template>
   </ul>
 
   <div class="nav-profile" #profileMenuContainer>

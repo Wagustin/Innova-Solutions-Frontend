@@ -16,6 +16,7 @@ export class MiPerfil implements OnInit {
   originalProfileData: any = {};
   fotoPerfil: string | null = null;
   saved = false;
+  serverErrorMessage = '';
   showAvatarModal = false;
   isDragOver = false;
 
@@ -106,6 +107,7 @@ export class MiPerfil implements OnInit {
   }
 
   onSave() {
+    this.serverErrorMessage = '';
     if (this.perfilForm.valid) {
       // El backend requiere todos estos campos según el OpenAPI
       const payload = this.perfilForm.getRawValue();
@@ -118,7 +120,10 @@ export class MiPerfil implements OnInit {
           this.perfilForm.markAsPristine();
           setTimeout(() => this.saved = false, 3000);
         },
-        error: (err) => console.error('Error updating user', err)
+        error: (err) => {
+          console.error('Error updating user', err);
+          this.serverErrorMessage = err.error?.message || err.error?.error || err.message || 'Error al actualizar el perfil';
+        }
       });
     }
   }
