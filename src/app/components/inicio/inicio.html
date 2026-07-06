@@ -121,68 +121,64 @@
   </ng-container>
 
   <ng-container *ngIf="!esMaestro">
-    <!-- Hero Section para Alumnos/Genérico -->
-    <section class="hero-section">
-      <div class="hero-text">
-        <h1>APRENDE AHORA MISMO DE LA FORMA MÁS <span class="highlight-blue">DIVERTIDA POSIBLEEEE!</span></h1>
-        <button class="btn btn-black hero-btn" routerLink="/mis-flashcards">¡Comenzar ahora!</button>
-      </div>
-      <div class="hero-image">
-        <div class="img-placeholder"><i class="fa-solid fa-rocket"></i> Ilustración</div>
-      </div>
-    </section>
-
-    <!-- Content Section -->
-    <section class="content-section">
-      <h2 class="section-subtitle">Ganas de aprender + buenas flashcards = <span class="highlight-pink">aprendizaje perfecto</span></h2>
+    <div class="dashboard-wrapper">
       
-      <div class="subjects-container">
-        <div class="subject-card">
-          <div class="subject-icon"><i class="fa-solid fa-calculator"></i></div>
-          <h3>Problemas matemáticos</h3>
+      <!-- ENCABEZADO ALUMNO -->
+      <section class="dashboard-header animate-fade-in">
+        <div class="header-content">
+          <h1>¡Hola! Bienvenido a tu panel de estudio</h1>
+          <p>Continúa donde lo dejaste, repasa tus flashcards y mejora tus resultados.</p>
         </div>
-        <div class="subject-card">
-          <div class="subject-icon"><i class="fa-solid fa-ruler-combined"></i></div>
-          <h3>Geometría</h3>
+        <div class="header-actions">
+          <button routerLink="/mis-flashcards" class="btn-create-pulse bg-purple">
+            <i class="fa-solid fa-play"></i>
+            <span>Estudiar Ahora</span>
+          </button>
         </div>
-        <div class="subject-card">
-          <div class="subject-icon"><i class="fa-solid fa-brain"></i></div>
-          <h3>Lógica matemática</h3>
-        </div>
-        <div class="subject-card">
-          <div class="subject-icon"><i class="fa-solid fa-lightbulb"></i></div>
-          <h3>Resolución de problemas</h3>
-        </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- Testimonials Section -->
-    <section class="testimonials-section">
-      <h2 class="section-title">Nuestros resultados hablan por si solos <i class="fa-solid fa-trophy"></i></h2>
-      
-      <div class="testimonials-grid">
-        <div class="testimonial-card">
-          <p class="quote">"Desde que uso Innova-Solutions, mis calificaciones en matemáticas han subido de forma increíble. ¡Es muy divertido!"</p>
-          <div class="author">
-            <div class="author-img"><i class="fa-solid fa-user"></i></div>
-            <div class="author-info">
-              <h4>María Lopez</h4>
-              <span>Estudiante</span>
-            </div>
+      <!-- TARJETAS DE ESTADISTICAS ALUMNO -->
+      <section class="stats-grid animate-slide-up">
+        <div class="stat-card">
+          <div class="stat-icon bg-blue"><i class="fa-solid fa-layer-group"></i></div>
+          <div class="stat-info">
+            <h3>Nuevas</h3>
+            <p>Flashcards Pendientes</p>
           </div>
         </div>
-        <div class="testimonial-card">
-          <p class="quote">"Crear flashcards me ha ayudado a memorizar fórmulas de geometría sin esfuerzo. 100% recomendado."</p>
-          <div class="author">
-            <div class="author-img"><i class="fa-solid fa-user"></i></div>
-            <div class="author-info">
-              <h4>Carlos Ruiz</h4>
-              <span>Estudiante</span>
+        <div class="stat-card">
+          <div class="stat-icon bg-green"><i class="fa-solid fa-check-double"></i></div>
+          <div class="stat-info">
+            <h3>Progreso</h3>
+            <p>Lecciones Completadas</p>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon bg-orange"><i class="fa-solid fa-fire"></i></div>
+          <div class="stat-info">
+            <h3>Racha</h3>
+            <p>Días de estudio</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- CONTENIDO PRINCIPAL ALUMNO -->
+      <div class="dashboard-main-grid animate-slide-up-delayed" style="grid-template-columns: 1fr;">
+        <div class="glass-panel panel-flashcards">
+          <div class="panel-header">
+            <h2><i class="fa-solid fa-book-open"></i> Continúa aprendiendo</h2>
+          </div>
+          <div class="panel-body">
+            <div class="empty-state-modern">
+              <div class="empty-icon"><i class="fa-solid fa-rocket"></i></div>
+              <p>¡Todo listo para empezar a estudiar! Ve a la sección de flashcards para comenzar.</p>
+              <button routerLink="/mis-flashcards" class="btn btn-primary mt-3">Ver Mis Flashcards</button>
             </div>
           </div>
         </div>
       </div>
-    </section>
+      
+    </div>
   </ng-container>
 
 </div>

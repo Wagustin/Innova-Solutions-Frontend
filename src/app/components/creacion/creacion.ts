@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, NgZone } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -35,7 +35,7 @@ export class Creacion implements OnInit {
     private api: ApiDataService,
     private route: ActivatedRoute,
     private router: Router,
-    private cdr: ChangeDetectorRef
+    private zone: NgZone
   ) {}
 
   ngOnInit() {
@@ -73,45 +73,46 @@ export class Creacion implements OnInit {
       this.editId = Number(editParam);
       this.api.getFlashcard(this.editId).subscribe({
         next: (f) => {
-          this.flashcardForm.patchValue({
-            leccionId: f.leccion?.id ?? f.leccionId,
-            preguntaTexto: f.preguntaTexto,
+          this.zone.run(() => {
+            this.flashcardForm.patchValue({
+              leccionId: f.leccion?.id ?? f.leccionId,
+              preguntaTexto: f.preguntaTexto,
+            });
+            if (f.opciones?.length > 0) {
+              this.flashcardForm.patchValue({
+                resp1: f.opciones[0].textoOpcion,
+                resp1Correcta: f.opciones[0].esCorrecta,
+                resp1Feedback: f.opciones[0].feedbackRespuesta,
+              });
+            }
+            if (f.opciones?.length > 1) {
+              this.flashcardForm.patchValue({
+                resp2: f.opciones[1].textoOpcion,
+                resp2Correcta: f.opciones[1].esCorrecta,
+                resp2Feedback: f.opciones[1].feedbackRespuesta,
+              });
+            }
+            this.imagenUrl = f.imagenUrl || '';
+            this.modalAbierto = 'flashcard';
           });
-          if (f.opciones?.length > 0) {
-            this.flashcardForm.patchValue({
-              resp1: f.opciones[0].textoOpcion,
-              resp1Correcta: f.opciones[0].esCorrecta,
-              resp1Feedback: f.opciones[0].feedbackRespuesta,
-            });
-          }
-          if (f.opciones?.length > 1) {
-            this.flashcardForm.patchValue({
-              resp2: f.opciones[1].textoOpcion,
-              resp2Correcta: f.opciones[1].esCorrecta,
-              resp2Feedback: f.opciones[1].feedbackRespuesta,
-            });
-          }
-          this.imagenUrl = f.imagenUrl || '';
-          this.modalAbierto = 'flashcard';
-          this.cdr.detectChanges();
         }
       });
     }
   }
 
   loadData() {
-    this.api.getCategorias().subscribe({ next: res => { this.categorias = res; this.cdr.detectChanges(); }, error: err => { console.error(err); this.cdr.detectChanges(); } });
-    this.api.getTemas().subscribe({ next: res => { this.temas = res; this.cdr.detectChanges(); }, error: err => { console.error(err); this.cdr.detectChanges(); } });
-    this.api.getLecciones().subscribe({ next: res => { this.lecciones = res; this.cdr.detectChanges(); }, error: err => { console.error(err); this.cdr.detectChanges(); } });
-    this.api.getFlashcards().subscribe({ next: res => { this.flashcards = res; this.cdr.detectChanges(); }, error: err => { console.error(err); this.cdr.detectChanges(); } });
+    this.api.getCategorias().subscribe({ next: res => this.zone.run(() => this.categorias = res), error: err => console.error(err) });
+    this.api.getTemas().subscribe({ next: res => this.zone.run(() => this.temas = res), error: err => console.error(err) });
+    this.api.getLecciones().subscribe({ next: res => this.zone.run(() => this.lecciones = res), error: err => console.error(err) });
+    this.api.getFlashcards().subscribe({ next: res => this.zone.run(() => this.flashcards = res), error: err => console.error(err) });
     this.api.getUsuarios().subscribe({
       next: (res) => {
-        this.alumnos = res.filter((u: any) => u.rol?.id === 3);
-        this.cdr.detectChanges();
+        this.zone.run(() => {
+          this.alumnos = res.filter((u: any) => u.rol?.id === 3);
+        });
       },
       error: (err) => {
         console.error('No se pudieron cargar los alumnos (posible falta de permisos):', err);
-        this.cdr.detectChanges();
       }
     });
   }

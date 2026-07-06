@@ -42,7 +42,7 @@ export class AuthService {
           localStorage.setItem('rolId', String(body.rolId));
         } else {
           const rol = localStorage.getItem('rol');
-          if (rol === 'PROFESOR') localStorage.setItem('rolId', '1');
+          if (rol === 'PROFESOR' || rol === 'MAESTRO') localStorage.setItem('rolId', '1');
           else if (rol === 'PADRE' || rol === 'TUTOR') localStorage.setItem('rolId', '2');
           else if (rol === 'ALUMNO') localStorage.setItem('rolId', '3');
         }
