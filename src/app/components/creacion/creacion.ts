@@ -170,7 +170,7 @@ export class Creacion implements OnInit {
     // subir al server
     this.imagenSubiendo = true;
     this.api.subirImagen(file).subscribe({
-      next: (res) => { this.imagenUrl = 'http://localhost:8080' + res.url; this.imagenSubiendo = false; },
+      next: (res) => { this.imagenUrl = res.url; this.imagenSubiendo = false; },
       error: () => { this.imagenSubiendo = false; alert('Error al subir la imagen'); }
     });
   }
