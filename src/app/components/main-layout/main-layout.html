@@ -6,7 +6,8 @@
   <ul class="nav-links">
     <ng-container *ngIf="esPadre; else defaultLinks">
       <li><a routerLink="/padre/dashboard" routerLinkActive="active">Inicio</a></li>
-      <li><a routerLink="/padre/registrar-alumno" routerLinkActive="active">Mis Hijos</a></li>
+      <li><a routerLink="/mis-alumnos" routerLinkActive="active">Mis Hijos</a></li>
+      <li><a routerLink="/padre/registrar-alumno" routerLinkActive="active">Registrar Hijo</a></li>
       <li><a routerLink="/acerca-de" routerLinkActive="active">Acerca de</a></li>
     </ng-container>
     <ng-template #defaultLinks>
