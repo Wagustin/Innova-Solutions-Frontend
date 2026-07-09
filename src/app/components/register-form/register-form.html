@@ -17,7 +17,9 @@
     ✓ Se registró correctamente
   </div>
 
-  <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" style="width: 100%;">
+  <app-pencil-loader *ngIf="isLoading"></app-pencil-loader>
+
+  <form *ngIf="!isLoading" [formGroup]="registerForm" (ngSubmit)="onSubmit()" style="width: 100%;">
 
     <!-- ========== CAMPOS PARA ALUMNO ========== -->
     <ng-container *ngIf="isAlumno">

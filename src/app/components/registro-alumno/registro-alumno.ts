@@ -3,13 +3,14 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } 
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { ApiDataService } from '../../services/api-data.service';
+import { PencilLoaderComponent } from '../pencil-loader/pencil-loader';
 
 const ANIMALES = ['🐶','🐱','🐼','🦊','🐸','🦁','🐯','🐰','🐵','🐮','🐷','🦄','🐙','🦋','🐢','🦉','🐺','🦝','🐴','🐔','🐧','🐨','🦖','🐲'];
 
 @Component({
   selector: 'app-registro-alumno',
   standalone: true,
-  imports: [ReactiveFormsModule, FormsModule, CommonModule],
+  imports: [ReactiveFormsModule, FormsModule, CommonModule, PencilLoaderComponent],
   templateUrl: './registro-alumno.html',
   styleUrls: ['./registro-alumno.css']
 })
@@ -21,6 +22,7 @@ export class RegistroAlumno implements OnInit {
   alumnoForm!: FormGroup;
   submitAttempted = false;
   registrationSuccess = false;
+  isLoading = false;
   serverErrorMessage = '';
 
   // Children lists and relations
@@ -318,8 +320,10 @@ export class RegistroAlumno implements OnInit {
       fotoPerfil: ANIMALES[this.hijos.length % ANIMALES.length]
     };
 
+    this.isLoading = true;
     this.apiService.registrarAlumno(payload).subscribe({
       next: (res) => {
+        this.isLoading = false;
         const animal = ANIMALES[(res.id * 7 + 13) % ANIMALES.length];
         res.fotoPerfil = animal;
         this.apiService.actualizarUsuario(res.id, {
@@ -344,6 +348,7 @@ export class RegistroAlumno implements OnInit {
         }, 1500);
       },
       error: (err) => {
+        this.isLoading = false;
         console.error('Error al registrar alumno:', err);
         const msg = (err.error?.message || err.error?.error || err.message || '').toLowerCase();
         if (msg.includes('ya existe') || msg.includes('already exists') || msg.includes('duplicate') || msg.includes('username')) {

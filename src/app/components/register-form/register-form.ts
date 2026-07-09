@@ -4,10 +4,12 @@ import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ApiDataService } from '../../services/api-data.service';
 
+import { PencilLoaderComponent } from '../pencil-loader/pencil-loader';
+
 @Component({
   selector: 'app-register-form',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [ReactiveFormsModule, CommonModule, PencilLoaderComponent],
   templateUrl: './register-form.html',
   styleUrls: ['./register-form.css']
 })
@@ -15,6 +17,7 @@ export class RegisterForm implements OnInit {
   registerForm!: FormGroup;
   submitAttempted = false;
   registrationSuccess = false;
+  isLoading = false;
   serverErrorMessage = '';
   
   selectedRoleName = 'USUARIO';
@@ -109,13 +112,16 @@ export class RegisterForm implements OnInit {
     localStorage.setItem('rol', this.selectedRoleName);
     localStorage.setItem('rolId', String(this.selectedRoleId));
 
+    this.isLoading = true;
     this.apiService.registrarUsuario(payload).subscribe({
       next: (res) => {
+        this.isLoading = false;
         this.registrationSuccess = true;
         this.registerForm.disable();
         setTimeout(() => this.goToLogin(), 2000);
       },
       error: (err) => {
+        this.isLoading = false;
         console.error('Error en registro:', err);
         this.serverErrorMessage = err.error?.message || err.message || 'Error al comunicarse con el servidor';
       }
