@@ -40,9 +40,8 @@
         <i class="fa-solid fa-circle-check"></i>
         <span>Alumno registrado correctamente</span>
       </div>
-      <app-pencil-loader *ngIf="isLoading"></app-pencil-loader>
 
-      <form *ngIf="!isLoading" [formGroup]="alumnoForm" (ngSubmit)="onSubmit()">
+      <form [formGroup]="alumnoForm" (ngSubmit)="onSubmit()">
         <div class="form-group">
           <label>Nombre de Usuario del Niño</label>
           <input type="text" formControlName="nickname" class="form-control"
